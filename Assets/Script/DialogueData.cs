@@ -10,7 +10,7 @@
 public class DialogueData : ScriptableObject
 {
 	[Header("對話者名稱")]
-	string dialogueTalkerName = "";
+	public string dialogueTalkerName = "";
 	[Header("對話內容陣列"), TextArea(2, 5)]
-	string[] dialogueContents;
+	public string[] dialogueContents;
 }
