@@ -27,6 +27,11 @@ public class DialogueSystem : MonoBehaviour
 	public TextMeshProUGUI textContent;
 	[Header("對話繼續圖示")]
 	public GameObject continueIcon = null;
+
+	[Tooltip("是否自動播放")]
+	private bool autoplay = false;
+	[Tooltip("是否隱藏對話框")]
+	private bool hideDialogue = false;
 	#endregion
 
 	private void Awake()
@@ -35,6 +40,28 @@ public class DialogueSystem : MonoBehaviour
 							//talkUI.alpha = 0f;  // 一開始隱藏對話框 α值為0
 
 		StartDialogue();
+	}
+
+	private void Update()
+	{
+		//if (Input.GetKeyDown(KeyCode.Q))
+		//{
+		//	StartDialogue();
+		//}
+
+		// 如果 對話框隱藏時
+		if (hideDialogue == true)
+		{
+			// 如果 按下滑鼠左鍵
+			if (Input.GetKeyDown(KeyCode.Mouse0))
+			{
+				// 顯示對話畫布 透明度為1
+				dialogieUI.alpha = 1;
+
+				// 是否隱藏對話框 = false
+				hideDialogue = false;
+			}
+		}
 	}
 
 	/// <summary>
@@ -65,7 +92,7 @@ public class DialogueSystem : MonoBehaviour
 			// 第二個迴圈跑該總對話內容中共有幾個字
 			for (int j = 0; j < dialogueData.dialogueContents[i].Length; j++)
 			{
-				//Debug.Log(dialogueData.dialogueContents[i][j]);
+				Debug.Log(dialogueData.dialogueContents[i][j]);
 				// 更新對話內容
 				textContent.text += dialogueData.dialogueContents[i][j];
 				// 打字間隔
@@ -75,12 +102,26 @@ public class DialogueSystem : MonoBehaviour
 			// 每段對話完成後顯示繼續圖示
 			continueIcon.SetActive(true);
 
-			// 等待玩家按下指定的按鍵 來繼續下段對話
-			while (!(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0)))
+			// 如果 沒有隱藏對話框的話
+			if (hideDialogue == false)
 			{
-				// null 為每一幀的時間
-				yield return null;
+				// 如果 沒有自動播放的話
+				if (autoplay == false)
+				{
+					// 等待玩家按下指定的按鍵 來繼續下段對話
+					while (!(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0)))
+					{
+						// null 為每一幀的時間
+						yield return null;
+					}
+				}
 			}
+			else if (autoplay == true)
+			{
+				Debug.Log("自動播放中");
+				//yield return new WaitForSeconds(0.3f);
+			}
+
 			// 玩家按下繼續按鈕後 如果對話內容為空 則對話者名稱為空
 			if (textContent.text == "")
 			{
@@ -100,6 +141,7 @@ public class DialogueSystem : MonoBehaviour
 	/// </summary>
 	public void HideDialogue()
 	{
+		hideDialogue = true;
 		dialogieUI.alpha = 0;
 	}
 }
