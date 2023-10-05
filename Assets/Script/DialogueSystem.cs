@@ -29,9 +29,9 @@ public class DialogueSystem : MonoBehaviour
 	public GameObject continueIcon = null;
 
 	[Tooltip("是否自動播放")]
-	private bool autoplay = false;
+	private bool isAutoplay = false;
 	[Tooltip("是否隱藏對話框")]
-	private bool hideDialogue = false;
+	private bool isHideDialogue = false;
 	#endregion
 
 	private void Awake()
@@ -50,7 +50,7 @@ public class DialogueSystem : MonoBehaviour
 		//}
 
 		// 如果 對話框隱藏時
-		if (hideDialogue == true)
+		if (isHideDialogue == true)
 		{
 			// 如果 按下滑鼠左鍵
 			if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -59,7 +59,7 @@ public class DialogueSystem : MonoBehaviour
 				dialogieUI.alpha = 1;
 
 				// 是否隱藏對話框 = false
-				hideDialogue = false;
+				isHideDialogue = false;
 			}
 		}
 	}
@@ -103,10 +103,10 @@ public class DialogueSystem : MonoBehaviour
 			continueIcon.SetActive(true);
 
 			// 如果 沒有隱藏對話框的話
-			if (hideDialogue == false)
+			if (isHideDialogue == false)
 			{
 				// 如果 沒有自動播放的話
-				if (autoplay == false)
+				if (isAutoplay == false)
 				{
 					// 等待玩家按下指定的按鍵 來繼續下段對話
 					while (!(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0)))
@@ -115,8 +115,12 @@ public class DialogueSystem : MonoBehaviour
 						yield return null;
 					}
 				}
+				else if (isAutoplay)
+				{
+					continue;
+				}
 			}
-			else if (autoplay == true)
+			else if (isAutoplay == true)
 			{
 				Debug.Log("自動播放中");
 				//yield return new WaitForSeconds(0.3f);
@@ -132,7 +136,7 @@ public class DialogueSystem : MonoBehaviour
 			// 隱藏繼續圖示
 			continueIcon.SetActive(false);
 			// 如果對話段落已結束 就關閉對話介面
-			if (i == dialogueData.dialogueContents.Length - 1) dialogieUI.alpha = 0;
+			//if (i == dialogueData.dialogueContents.Length - 1) dialogieUI.alpha = 0;
 		}
 	}
 
@@ -141,7 +145,16 @@ public class DialogueSystem : MonoBehaviour
 	/// </summary>
 	public void HideDialogue()
 	{
-		hideDialogue = true;
+		isHideDialogue = true;
 		dialogieUI.alpha = 0;
+	}
+
+	/// <summary>
+	/// 自動顯示對話
+	/// </summary>
+	public void AutoPlay()
+	{
+		isAutoplay = true;
+		Debug.Log("<color=#906>正在自動播放</color>");
 	}
 }
