@@ -10,9 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53ad2fed0d70d4e4a9cccb7e73ab9616, type: 3}
-  m_Name: "\u8D77\u59CB\u5C0D\u8A71"
+  m_Name: "\u6E2C\u8A66\u5C0D\u8A711"
   m_EditorClassIdentifier: 
-  dialogueTalkerName: "\u65C1\u767D"
+  dialogueID: 1
+  toDialogueID: 3
+  optionID: 0
+  dialogueType: 0
+  dialogueTalkerName: "\u5C0F\u611B"
   dialogueContents:
-  - "\u9019\u662F\u4E00\u500B\u8D77\u59CB\u5C0D\u8A71\u3002"
-  - "\u53EF\u9EDE\u64CA\u6309\u9375\u7E7C\u7E8C\u89C0\u770B~"
+  - "\u55E8! \u6211\u662F\u5C0F\u611B\u3002"
+  - "\u9019\u88E1\u662F\u54EA\u88E1\u5462?\n\u59B3\u53C8\u662F\u8AB0\u5462?"
+  optionContents: []
+  effectType: 0
+  effectTargetName: 
+  favorability: 0
+  strength: 0
