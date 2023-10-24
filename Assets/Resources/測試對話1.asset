@@ -13,14 +13,13 @@ MonoBehaviour:
   m_Name: "\u6E2C\u8A66\u5C0D\u8A711"
   m_EditorClassIdentifier: 
   dialogueID: 1
-  toDialogueID: 3
+  toDialogueID: 2
   optionID: 0
   dialogueType: 0
   dialogueTalkerName: "\u5C0F\u611B"
   dialogueContents:
   - "\u55E8! \u6211\u662F\u5C0F\u611B\u3002"
   - "\u9019\u88E1\u662F\u54EA\u88E1\u5462?\n\u59B3\u53C8\u662F\u8AB0\u5462?"
-  optionContents: []
   effectType: 0
   effectTargetName: 
   favorability: 0

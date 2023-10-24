@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53ad2fed0d70d4e4a9cccb7e73ab9616, type: 3}
-  m_Name: "\u6E2C\u8A66\u5C0D\u8A712"
+  m_Name: "\u6E2C\u8A66\u5C0D\u8A714"
   m_EditorClassIdentifier: 
-  dialogueID: 2
-  toDialogueID: 4
-  optionID: 0
-  dialogueType: 0
-  dialogueTalkerName: "\u5C0F\u5149"
+  dialogueID: 4
+  toDialogueID: -1
+  optionID: 4
+  dialogueType: 1
+  dialogueTalkerName: 
   dialogueContents:
-  - "\u75FE...\u6211\u662F\u5C0F\u5149\uFF0C\u6211\u4E5F\u4E0D\u77E5\u9053\u9019\u88E1\u662F\u54EA\u88E1\u3002"
-  - "(\u8A72\u600E\u9EBC\u8FA6\u5462?)"
+  - "\u54EA\u500B...\u8981\u4E00\u8D77\u8D70\u55CE?"
+  - "\u59B3\u662F\u600E\u9EBC\u51FA\u73FE\u5728\u9019\u88E1\u7684\u5462?"
+  - ......
   effectType: 0
   effectTargetName: 
   favorability: 0

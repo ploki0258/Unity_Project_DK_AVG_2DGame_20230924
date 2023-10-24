@@ -11,7 +11,7 @@ public class DialogueData : ScriptableObject
 {
 	[Header("對話編號")]
 	public int dialogueID = 0;
-	[Header("對話編號跳轉至"), Tooltip("可跳轉至對話或選項")]
+	[Header("對話編號跳轉至"), Tooltip("要跳轉至對話或選項的ID")]
 	public int toDialogueID;
 	[Header("選項編號")]
 	public int optionID;
@@ -19,13 +19,13 @@ public class DialogueData : ScriptableObject
 	public DialogueType dialogueType = DialogueType.對話;
 	[Header("對話者名稱")]
 	public string dialogueTalkerName = "";
-	[Header("對話內容陣列"), TextArea(2, 5)]
+	[Header("對話/選項內容陣列"), TextArea(2, 5)]
 	public string[] dialogueContents;
 	//[Header("選項個數"), Range(0, 5)]
 	//public int optionCount = 0;
-	[Header("選項內容"), TextArea(2, 5)]
-	public string[] optionContents = { "" };
-	[Header("效果種類")]
+	//[Header("選項內容"), TextArea(2, 5)]
+	//public string[] optionContents = { "" };
+	[Header("對話效果種類")]
 	public EffectType effectType = EffectType.無效果;
 	[Header("效果對象名稱")]
 	public string effectTargetName = "";

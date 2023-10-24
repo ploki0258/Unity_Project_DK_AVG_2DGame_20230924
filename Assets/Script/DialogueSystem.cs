@@ -21,7 +21,7 @@ public class DialogueSystem : MonoBehaviour
 	#region 欄位
 	[Header("對話資料")]
 	public DialogueData[] dialogueData;
-	[Header("當前對話編號")]
+	[Header("當前對話編號"), Tooltip("當前對話編號")]
 	public int currentDialogueID = 0;
 	[Header("對話間隔"), Range(0, 2)]
 	public float interval = 0.2f;
@@ -173,10 +173,16 @@ public class DialogueSystem : MonoBehaviour
 			else if (dialogueData[i].dialogueType == DialogueType.選項 && currentDialogueID == dialogueData[i].toDialogueID)
 			{
 				Debug.Log("<color=orange>這是「選項」</color>");
-				dialogueData[i].optionID = dialogueData[i].toDialogueID;
-				Debug.Log($"<color=orange>選項ID：{dialogueData[i].optionID}</color>");
+				//dialogueData[i].dialogueID = dialogueData[i].toDialogueID;
+				//Debug.Log($"<color=orange>選項ID：{dialogueData[i].dialogueID}</color>");
+				currentDialogueID = dialogueData[i].toDialogueID;
 			}
 		}
+	}
+
+	public void OnClick()
+	{
+
 	}
 
 	/// <summary>
