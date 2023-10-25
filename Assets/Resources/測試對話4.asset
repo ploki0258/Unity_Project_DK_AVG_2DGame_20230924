@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueID: 4
   toDialogueID: -1
-  optionID: 4
+  toOptionID: 0500000006000000ffffffff
   dialogueType: 1
+  characterPos: 2
   dialogueTalkerName: 
   dialogueContents:
   - "\u54EA\u500B...\u8981\u4E00\u8D77\u8D70\u55CE?"

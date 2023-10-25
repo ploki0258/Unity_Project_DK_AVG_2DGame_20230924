@@ -14,13 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueID: 0
   toDialogueID: 1
-  optionID: 0
   dialogueType: 0
+  characterPos: 5
   dialogueTalkerName: "\u65C1\u767D"
   dialogueContents:
-  - "\u9019\u662F\u4E00\u500B\u8D77\u59CB\u5C0D\u8A71\u3002"
-  - "\u53EF\u9EDE\u64CA\u6309\u9375\u7E7C\u7E8C\u89C0\u770B~"
-  optionContents: []
+  - "\u9019\u662F\u4E00\u500B\u8D77\u59CB\u5C0D\u8A71\uFF0C\u53EF\u9EDE\u64CA\u6309\u9375\u7E7C\u7E8C\u89C0\u770B~"
   effectType: 0
   effectTargetName: 
   favorability: 0
