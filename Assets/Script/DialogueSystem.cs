@@ -23,6 +23,8 @@ public class DialogueSystem : MonoBehaviour
 	[Tooltip("對話資料陣列")]
 	public DialogueData[] dialogueDataArrary = new DialogueData[0];
 
+	private List<GameObject> garbageCan = new List<GameObject>();
+
 	[Tooltip("角色名稱對應角色圖示字典")]
 	Dictionary<string, Image> characterImagesDic = new Dictionary<string, Image>();
 
@@ -56,9 +58,9 @@ public class DialogueSystem : MonoBehaviour
 	public List<Image> characterImages = new List<Image>();
 
 	[Tooltip("是否自動播放")]
-	private bool isAutoplay = false;
+	public bool isAutoplay = false;
 	[Tooltip("是否隱藏對話框")]
-	private bool isHideDialogue = false;
+	public bool isHideDialogue = false;
 	#endregion
 
 	private void Awake()
@@ -66,7 +68,7 @@ public class DialogueSystem : MonoBehaviour
 		instance = this;    // 讓單例等於自己
 							//talkUI.alpha = 0f;  // 一開始隱藏對話框 α值為0
 		dialogueDataArrary = Resources.LoadAll<DialogueData>("");
-
+		// 指定字典的對應值
 		for (int i = 0; i < characteName.Length; i++)
 		{
 			characterImagesDic[characteName[i]] = characterImages[i];
@@ -80,10 +82,6 @@ public class DialogueSystem : MonoBehaviour
 
 	private void Update()
 	{
-		//if (Input.GetKeyDown(KeyCode.Q))
-		//{
-		//	StartDialogue();
-		//}
 		Debug.Log($"<color=Green>當前ID：{currentDialogueID}</color>");
 		// 如果 對話框隱藏時
 		if (isHideDialogue == true)
@@ -103,7 +101,7 @@ public class DialogueSystem : MonoBehaviour
 	/// <summary>
 	/// 開始對話
 	/// </summary>
-	private void StartDialogue()
+	public void StartDialogue()
 	{
 		StartCoroutine(DisplayEveryDialogue());
 	}
@@ -123,192 +121,187 @@ public class DialogueSystem : MonoBehaviour
 		continueIcon.SetActive(false);
 		optionButton.SetActive(false);
 
-		// 第一個迴圈跑總共有幾個對話資料
+		// 第一個迴圈跑 總共有幾個對話資料_i
 		for (int i = 0; i < dialogueData.Length; i++)
 		{
-			// 如果第i個對話資料.對話類別為"對話" 且 當前ID 等於 第i個對話資料.對話編號 的話 才執行
-			if (dialogueData[i].dialogueType == DialogueType.對話 && currentDialogueID == dialogueData[i].dialogueID)
+			// 第二個迴圈跑第i個對話資料中的對話總表 總共有幾個對話數_x
+			for (int x = 0; x < dialogueData[i].dialogueTotalList.Count; x++)
 			{
-				// 隱藏對話選項按鈕
-				optionButton.SetActive(false);
-				// 更新對話者名稱
-				textTalker.text = dialogueData[i].dialogueTalkerName;
-				// 更新對話者圖示位置
-				if (dialogueData[i].characterPos == TalkerShow.兩人_左邊)
+				// 如果第i個對話資料.第x個對話數.對話類別為"對話" 且 當前ID 等於 第i個對話資料.第x個對話數.對話編號 的話 才執行
+				if (dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.對話 && currentDialogueID ==
+					dialogueData[i].dialogueTotalList[x].dialogueID)
 				{
-					Debug.Log("這是對話中_左邊");
-					dialogueImage_left.transform.localScale = Vector3.one;
-					dialogueImage_right.transform.localScale = Vector3.one;
-					dialogueImage_left = characterImagesDic[dialogueData[i].dialogueTalkerName];
-					for (int x = 1; x <= 5; x++)
+					// 隱藏對話選項按鈕
+					optionButton.SetActive(false);
+					// 更新對話者名稱
+					textTalker.text = dialogueData[i].dialogueTotalList[x].dialogueTalkerName;
+					// 更新對話者圖示顯示狀態
+					if (dialogueData[i].dialogueTotalList[x].characterPos == TalkerShow.兩人_左邊)
 					{
-						dialogueImage_left.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 1f);
-						dialogueImage_right.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 0.75f);
-					}
-				}
-				else if (dialogueData[i].characterPos == TalkerShow.兩人_右邊)
-				{
-					Debug.Log("這是對話中_右邊");
-					dialogueImage_right.transform.localScale = Vector3.one;
-					dialogueImage_left.transform.localScale = Vector3.one;
-					dialogueImage_right = characterImagesDic[dialogueData[i].dialogueTalkerName];
-					for (int x = 1; x <= 5; x++)
-					{
-						dialogueImage_right.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 1f);
-						dialogueImage_left.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 0.75f);
-					}
-				}
-				else if (dialogueData[i].characterPos == TalkerShow.兩人_一起)
-				{
-					Debug.Log("這是兩人");
-					dialogueImage_right.transform.localScale = Vector3.one;
-					dialogueImage_left.transform.localScale = Vector3.one;
-					for (int x = 1; x <= 5; x++)
-					{
-						dialogueImage_right.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 1f);
-						dialogueImage_left.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 1f);
-					}
-				}
-				else if (dialogueData[i].characterPos == TalkerShow.左邊)
-				{
-					Debug.Log("這是左邊");
-					dialogueImage_left.transform.localScale = Vector3.one;
-					dialogueImage_left = characterImagesDic[dialogueData[i].dialogueTalkerName];
-					for (int x = 1; x <= 5; x++)
-					{
-						dialogueImage_left.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 1f);
-					}
-					dialogueImage_right.transform.localScale = Vector3.zero;
-				}
-				else if (dialogueData[i].characterPos == TalkerShow.右邊)
-				{
-					Debug.Log("這是右邊");
-					dialogueImage_right.transform.localScale = Vector3.one;
-					dialogueImage_right = characterImagesDic[dialogueData[i].dialogueTalkerName];
-					for (int x = 1; x <= 5; x++)
-					{
-						dialogueImage_right.gameObject.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 1f);
-					}
-					dialogueImage_left.transform.localScale = Vector3.zero;
-				}
-				else if (dialogueData[i].characterPos == TalkerShow.無顯示)
-				{
-					Debug.Log("這是無顯示");
-					dialogueImage_left.transform.localScale = Vector3.zero;
-					dialogueImage_right.transform.localScale = Vector3.zero;
-				}
-
-				// 第二個迴圈跑第i個對話資料總共有幾個對話內容
-				// 迴圈初始值不可為重複
-				for (int j = 0; j < dialogueData[i].dialogueContents.Length; j++)
-				{
-					// 第三個迴圈跑第i個對話資料的第j個對話內容中總共有幾個字
-					for (int k = 0; k < dialogueData[i].dialogueContents[j].Length; k++)
-					{
-						Debug.Log(dialogueData[i].dialogueContents[j][k]);
-						// 更新對話內容
-						textContent.text += dialogueData[i].dialogueContents[j][k];
-						// 打字間隔
-						yield return new WaitForSeconds(interval);
-					}
-
-					// 每段對話完成後顯示繼續圖示
-					continueIcon.SetActive(true);
-
-					// 如果 沒有隱藏對話框的話
-					if (isHideDialogue == false)
-					{
-						// 如果 沒有自動播放的話
-						if (isAutoplay == false)
+						Debug.Log("這是對話中_左邊");
+						dialogueImage_left.transform.localScale = Vector3.one;
+						dialogueImage_right.transform.localScale = Vector3.one;
+						dialogueImage_left = characterImagesDic[dialogueData[i].dialogueTotalList[x].dialogueTalkerName];
+						for (int y = 1; y <= 5; y++)
 						{
-							// 等待玩家按下指定的按鍵 來繼續下段對話
-							while (!(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0)))
+							dialogueImage_left.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f);
+							dialogueImage_right.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 0.75f);
+						}
+					}
+					else if (dialogueData[i].dialogueTotalList[x].characterPos == TalkerShow.兩人_右邊)
+					{
+						Debug.Log("這是對話中_右邊");
+						dialogueImage_right.transform.localScale = Vector3.one;
+						dialogueImage_left.transform.localScale = Vector3.one;
+						dialogueImage_right = characterImagesDic[dialogueData[i].dialogueTotalList[x].dialogueTalkerName];
+						for (int y = 1; y <= 5; y++)
+						{
+							dialogueImage_right.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f);
+							dialogueImage_left.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 0.75f);
+						}
+					}
+					else if (dialogueData[i].dialogueTotalList[x].characterPos == TalkerShow.兩人_一起)
+					{
+						Debug.Log("這是兩人");
+						dialogueImage_right.transform.localScale = Vector3.one;
+						dialogueImage_left.transform.localScale = Vector3.one;
+						for (int y = 1; y <= 5; y++)
+						{
+							dialogueImage_right.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f);
+							dialogueImage_left.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f);
+						}
+					}
+					else if (dialogueData[i].dialogueTotalList[x].characterPos == TalkerShow.左邊)
+					{
+						Debug.Log("這是左邊");
+						dialogueImage_left.transform.localScale = Vector3.one;
+						dialogueImage_left = characterImagesDic[dialogueData[i].dialogueTotalList[x].dialogueTalkerName];
+						for (int y = 1; y <= 5; y++)
+						{
+							dialogueImage_left.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f);
+						}
+						dialogueImage_right.transform.localScale = Vector3.zero;
+					}
+					else if (dialogueData[i].dialogueTotalList[x].characterPos == TalkerShow.右邊)
+					{
+						Debug.Log("這是右邊");
+						dialogueImage_right.transform.localScale = Vector3.one;
+						dialogueImage_right = characterImagesDic[dialogueData[i].dialogueTotalList[x].dialogueTalkerName];
+						for (int y = 1; y <= 5; y++)
+						{
+							dialogueImage_right.gameObject.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f);
+						}
+						dialogueImage_left.transform.localScale = Vector3.zero;
+					}
+					else if (dialogueData[i].dialogueTotalList[x].characterPos == TalkerShow.無顯示)
+					{
+						Debug.Log("這是無顯示");
+						dialogueImage_left.transform.localScale = Vector3.zero;
+						dialogueImage_right.transform.localScale = Vector3.zero;
+					}
+
+					// 第三個迴圈跑第i個對話資料中的對話總表的第x個對話數 總共有幾個對話內容_j
+					// 迴圈初始值不可為重複
+					for (int j = 0; j < dialogueData[i].dialogueTotalList[x].dialogueContents.Length; j++)
+					{
+						// 第四個迴圈跑第i個對話資料中的對話總表的第x個對話數的第j個對話內容中 總共有幾個字_k
+						for (int k = 0; k < dialogueData[i].dialogueTotalList[x].dialogueContents[j].Length; k++)
+						{
+							Debug.Log(dialogueData[i].dialogueTotalList[x].dialogueContents[j][k]);
+							// 更新對話內容
+							textContent.text += dialogueData[i].dialogueTotalList[x].dialogueContents[j][k];
+							// 打字間隔
+							yield return new WaitForSeconds(interval);
+						}
+
+						// 每段對話完成後顯示繼續圖示
+						continueIcon.SetActive(true);
+
+						// 如果 沒有隱藏對話框的話
+						if (isHideDialogue == false)
+						{
+							// 如果 沒有自動播放的話
+							if (isAutoplay == false)
 							{
-								// null 為每一幀的時間
-								yield return null;
+								// 等待玩家按下指定的按鍵 來繼續下段對話
+								while (!(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0)))
+								{
+									// null 為每一幀的時間
+									yield return null;
+								}
+							}
+							else if (isAutoplay)
+							{
+								continue;
 							}
 						}
-						else if (isAutoplay)
+						else if (isAutoplay == true)
 						{
-							continue;
+							Debug.Log("自動播放中");
+							//yield return new WaitForSeconds(0.3f);
 						}
-					}
-					else if (isAutoplay == true)
-					{
-						Debug.Log("自動播放中");
-						//yield return new WaitForSeconds(0.3f);
+
+						// 玩家按下繼續按鈕後 清空對話內容
+						textContent.text = "";
+						// 隱藏繼續圖示
+						continueIcon.SetActive(false);
+						// 如果對話段落已結束 就關閉對話介面
+						//if (i == dialogueData.dialogueContents.Length - 1) dialogieUI.alpha = 0;
 					}
 
-					// 玩家按下繼續按鈕後 清空對話內容
-					textContent.text = "";
+					// 玩家按下繼續按鈕後 如果對話內容為空 則對話者名稱為空
+					if (textContent.text == "")
+						textTalker.text = "";
+					// 隱藏角色圖示
+					dialogueImage_left.transform.localScale = Vector3.zero;
+					dialogueImage_right.transform.localScale = Vector3.zero;
+
+					// 第五個迴圈跑第i個對話資料中的對話總表的第x個對話數 總共有幾個要跳轉至的對話或選項ID_j
+					for (int j = 0; j < dialogueData[i].dialogueTotalList[x].toDialogueOrOptionID.Length; j++)
+					{
+						// 當前的對話ID = 第i個對話資料.第x個對話數.要跳轉至的對話或選項ID
+						currentDialogueID = dialogueData[i].dialogueTotalList[x].toDialogueOrOptionID[j];
+						Debug.Log("當前ID：" + currentDialogueID);
+					}
+				}
+				// 否則如果第i個對話資料.第x個對話數.對話類別為"選項" 且 當前ID 等於 第i個對話資料.第x個對話數.對話編號 的話 才執行
+				else if (dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.選項 && currentDialogueID ==
+						 dialogueData[i].dialogueTotalList[x].dialogueID)
+				{
+					Debug.Log("<color=orange>這是「選項」</color>");
 					// 隱藏繼續圖示
 					continueIcon.SetActive(false);
-					// 如果對話段落已結束 就關閉對話介面
-					//if (i == dialogueData.dialogueContents.Length - 1) dialogieUI.alpha = 0;
+					// 顯示對話選項按鈕
+					optionButton.SetActive(true);
+
+					foreach (GameObject t in garbageCan)
+					{
+						Destroy(t.gameObject);
+					}
+					garbageCan.Clear();
+
+					for (int j = 0; j < dialogueData[i].dialogueTotalList[x].dialogueContents.Length; j++)
+					{
+						int tempID = dialogueData[i].dialogueTotalList[x].toDialogueOrOptionID[j];
+						GameObject tempOption = Instantiate(optionButton, dialoguePos);
+						tempOption.GetComponentInChildren<TextMeshProUGUI>().text =
+							dialogueData[i].dialogueTotalList[x].dialogueContents[j].ToString();
+
+						Debug.Log($"<color=yellow>{dialogueData[i].dialogueTotalList[x].toDialogueOrOptionID[j]}</color>");
+						tempOption.GetComponent<Button>().onClick.AddListener
+							(
+								delegate
+								{
+									OptionManager.instance.OnClickToDialogueOrOption(tempID);
+								}
+							);
+						garbageCan.Add(tempOption);
+						Debug.Log($"<color=yellow>當前ID：{currentDialogueID}</color>");
+					}
+
+					optionButton.SetActive(false);
 				}
-
-				// 玩家按下繼續按鈕後 如果對話內容為空 則對話者名稱為空
-				if (textContent.text == "")
-					textTalker.text = "";
-				// 隱藏角色圖示
-				dialogueImage_left.transform.localScale = Vector3.zero;
-				dialogueImage_right.transform.localScale = Vector3.zero;
-
-				// 當前的對話ID = 第i個對話資料.要跳轉至的對話或選項的ID
-				currentDialogueID = dialogueData[i].toDialogueID;
-			}
-			// 否則如果第i個對話資料.對話類別為"選項" 且 當前ID 等於 第i個對話資料.對話編號 的話 才執行
-			else if (dialogueData[i].dialogueType == DialogueType.選項 && currentDialogueID == dialogueData[i].dialogueID)
-			{
-				Debug.Log("<color=orange>這是「選項」</color>");
-				// 隱藏繼續圖示
-				continueIcon.SetActive(false);
-				// 顯示對話選項按鈕
-				optionButton.SetActive(true);
-
-				for (int j = 0; j < dialogueData[i].dialogueContents.Length; j++)
-				{
-					GameObject tempOption = Instantiate(optionButton, dialoguePos);
-					tempOption.GetComponentInChildren<TextMeshProUGUI>().text = dialogueData[i].dialogueContents[j].ToString();
-
-					Debug.Log($"<color=yellow>{dialogueData[i].toOptionID[j]}</color>");
-					tempOption.GetComponent<Button>().onClick.AddListener
-						(
-							delegate
-							{
-								OnClickToDialogueOrOption(dialogueData[i].toOptionID[j]);
-							}
-						);
-					Debug.Log($"<color=yellow>當前ID：{currentDialogueID}</color>");
-				}
-				//currentDialogueID = dialogueData[i].toDialogueID;
 			}
 		}
-	}
-
-	public void OnClickToDialogueOrOption(int id)
-	{
-		currentDialogueID = id;
-		StartDialogue();
-		continueIcon.SetActive(true);
-		optionButton.SetActive(false);
-	}
-
-	/// <summary>
-	/// 隱藏對話框
-	/// </summary>
-	public void HideDialogue()
-	{
-		isHideDialogue = true;
-		dialogieUI.alpha = 0;
-	}
-
-	/// <summary>
-	/// 自動顯示對話
-	/// </summary>
-	public void AutoPlay()
-	{
-		isAutoplay = true;
-		Debug.Log("<color=#906>正在自動播放</color>");
 	}
 }

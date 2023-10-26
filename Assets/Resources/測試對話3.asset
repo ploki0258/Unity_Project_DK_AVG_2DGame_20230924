@@ -12,16 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53ad2fed0d70d4e4a9cccb7e73ab9616, type: 3}
   m_Name: "\u6E2C\u8A66\u5C0D\u8A713"
   m_EditorClassIdentifier: 
-  dialogueID: 3
-  toDialogueID: 4
-  dialogueType: 0
-  characterPos: 4
-  dialogueTalkerName: "\u5C0F\u5149"
-  dialogueContents:
-  - "\u55E8! \u6211\u662F\u5C0F\u5149\u3002"
-  - "\u9019\u88E1\u807D\u8AAA\u662F\u500B\u795E\u5947\u7684\u5730\u65B9\u5594!"
-  - "\u6211\u5011\u4E00\u8D77\u8D70\u5427~"
-  effectType: 0
-  effectTargetName: 
-  favorability: 0
-  strength: 0
+  dialogueTotalList:
+  - dialogueID: 5
+    toDialogueOrOptionID: 08000000
+    dialogueType: 0
+    characterPos: 3
+    dialogueTalkerName: "\u5C0F\u611B"
+    dialogueContents:
+    - "\u55EF..."
+    - "(\u8981\u4E00\u8D77\u8D70\u55CE?)"
+    effectType: 0
+    effectTargetName: 
+    favorability: 0
+    strength: 0
+  - dialogueID: 8
+    toDialogueOrOptionID: ffffffffffffffff
+    dialogueType: 1
+    characterPos: 3
+    dialogueTalkerName: "\u5C0F\u611B"
+    dialogueContents:
+    - "\u55EF...\u597D\u5427\n\u73FE\u5728\u597D\u50CF\u4E5F\u53EA\u80FD\u9019\u6A23\u5B50\u4E86\u3002"
+    - "\u7B97\u4E86\uFF0C\u6211\u4E0D\u76F8\u4FE1\u5176\u4ED6\u4EBA\u3002"
+    effectType: 0
+    effectTargetName: 
+    favorability: 0
+    strength: 0

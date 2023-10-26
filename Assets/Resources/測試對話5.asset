@@ -12,15 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53ad2fed0d70d4e4a9cccb7e73ab9616, type: 3}
   m_Name: "\u6E2C\u8A66\u5C0D\u8A715"
   m_EditorClassIdentifier: 
-  dialogueID: 5
-  toDialogueID: -1
-  toOptionID: 
-  dialogueType: 0
-  characterPos: 0
-  dialogueTalkerName: "\u5C0F\u611B"
-  dialogueContents:
-  - "\u597D\u554A"
-  effectType: 0
-  effectTargetName: 
-  favorability: 0
-  strength: 0
+  dialogueTotalList:
+  - dialogueID: 7
+    toDialogueOrOptionID: ffffffff
+    dialogueType: 0
+    characterPos: 3
+    dialogueTalkerName: "\u5C0F\u611B"
+    dialogueContents:
+    - ...
+    - ......
+    - "(\u90A3\u5B69\u5B50..\u90FD\u6C92\u8AAA\u8A71\uFF0C\u662F\u6015\u751F\u55CE?)"
+    - "(\u8AAA\u4F86\u4E5F\u662F\uFF0C\u8981\u662F\u6211\u7A81\u7136\u51FA\u73FE\u5728\u672A\u77E5\u7684\u5730\u65B9\uFF0C\u6211\u61C9\u8A72\u4E5F\u6703\u5687\u5F97\u8AAA\u4E0D\u51FA\u8A71\u4F86)"
+    - "(\u8AAA\u8A71...\u6211\u73FE\u5728\u597D\u50CF\u5C31\u9762\u81E8\u8457\u9019\u6A23\u7684\u60C5\u6CC1\u554A~)"
+    effectType: 0
+    effectTargetName: 
+    favorability: 0
+    strength: 0
