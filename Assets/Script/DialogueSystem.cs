@@ -26,7 +26,7 @@ public class DialogueSystem : MonoBehaviour
 	private List<GameObject> garbageCan = new List<GameObject>();
 
 	[Tooltip("角色名稱對應角色圖示字典")]
-	Dictionary<string, Image> characterImagesDic = new Dictionary<string, Image>();
+	public Dictionary<string, Image> characterImagesDic = new Dictionary<string, Image>();
 
 	#region 欄位
 	[Header("對話資料")]
@@ -51,16 +51,15 @@ public class DialogueSystem : MonoBehaviour
 	public GameObject optionButton = null;
 	[Header("對話選項座標")]
 	public RectTransform dialoguePos = null;
+	[Header("消失漸變倍數")]
+	public float vanishMultiple = 1f;
 
 	[Header("角色名稱陣列")]
 	public string[] characteName;
 	[Header("角色圖示列表")]
 	public List<Image> characterImages = new List<Image>();
 
-	[Tooltip("是否自動播放")]
-	public bool isAutoplay = false;
-	[Tooltip("是否隱藏對話框")]
-	public bool isHideDialogue = false;
+	private bool cancelTyping;
 	#endregion
 
 	private void Awake()
@@ -84,7 +83,7 @@ public class DialogueSystem : MonoBehaviour
 	{
 		Debug.Log($"<color=Green>當前ID：{currentDialogueID}</color>");
 		// 如果 對話框隱藏時
-		if (isHideDialogue == true)
+		if (DialogueManager.instance.isHideDialogue == true)
 		{
 			// 如果 按下滑鼠左鍵
 			if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -93,9 +92,11 @@ public class DialogueSystem : MonoBehaviour
 				dialogieUI.alpha = 1;
 
 				// 是否隱藏對話框 = false
-				isHideDialogue = false;
+				DialogueManager.instance.isHideDialogue = false;
 			}
 		}
+
+		hideDialogueUI(vanishMultiple);
 	}
 
 	/// <summary>
@@ -145,7 +146,7 @@ public class DialogueSystem : MonoBehaviour
 						for (int y = 1; y <= 5; y++)
 						{
 							dialogueImage_left.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f);
-							dialogueImage_right.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 0.75f);
+							dialogueImage_right.GetComponentsInChildren<Image>()[y].color = new Color(0.7f, 0.7f, 0.7f, 0.7f);
 						}
 					}
 					else if (dialogueData[i].dialogueTotalList[x].characterPos == TalkerShow.兩人_右邊)
@@ -157,7 +158,7 @@ public class DialogueSystem : MonoBehaviour
 						for (int y = 1; y <= 5; y++)
 						{
 							dialogueImage_right.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f);
-							dialogueImage_left.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 0.75f);
+							dialogueImage_left.GetComponentsInChildren<Image>()[y].color = new Color(0.7f, 0.7f, 0.7f, 0.7f);
 						}
 					}
 					else if (dialogueData[i].dialogueTotalList[x].characterPos == TalkerShow.兩人_一起)
@@ -218,10 +219,10 @@ public class DialogueSystem : MonoBehaviour
 						continueIcon.SetActive(true);
 
 						// 如果 沒有隱藏對話框的話
-						if (isHideDialogue == false)
+						if (DialogueManager.instance.isHideDialogue == false)
 						{
 							// 如果 沒有自動播放的話
-							if (isAutoplay == false)
+							if (DialogueManager.instance.isAutoplay == false)
 							{
 								// 等待玩家按下指定的按鍵 來繼續下段對話
 								while (!(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0)))
@@ -230,12 +231,12 @@ public class DialogueSystem : MonoBehaviour
 									yield return null;
 								}
 							}
-							else if (isAutoplay)
+							else if (DialogueManager.instance.isAutoplay)
 							{
 								continue;
 							}
 						}
-						else if (isAutoplay == true)
+						else if (DialogueManager.instance.isAutoplay == true)
 						{
 							Debug.Log("自動播放中");
 							//yield return new WaitForSeconds(0.3f);
@@ -245,16 +246,14 @@ public class DialogueSystem : MonoBehaviour
 						textContent.text = "";
 						// 隱藏繼續圖示
 						continueIcon.SetActive(false);
-						// 如果對話段落已結束 就關閉對話介面
-						//if (i == dialogueData.dialogueContents.Length - 1) dialogieUI.alpha = 0;
 					}
 
 					// 玩家按下繼續按鈕後 如果對話內容為空 則對話者名稱為空
-					if (textContent.text == "")
-						textTalker.text = "";
+					//if (textContent.text == "")
+					//	textTalker.text = "";
 					// 隱藏角色圖示
-					dialogueImage_left.transform.localScale = Vector3.zero;
-					dialogueImage_right.transform.localScale = Vector3.zero;
+					//dialogueImage_left.transform.localScale = Vector3.zero;
+					//dialogueImage_right.transform.localScale = Vector3.zero;
 
 					// 第五個迴圈跑第i個對話資料中的對話總表的第x個對話數 總共有幾個要跳轉至的對話或選項ID_j
 					for (int j = 0; j < dialogueData[i].dialogueTotalList[x].toDialogueOrOptionID.Length; j++)
@@ -298,8 +297,54 @@ public class DialogueSystem : MonoBehaviour
 						garbageCan.Add(tempOption);
 						Debug.Log($"<color=yellow>當前ID：{currentDialogueID}</color>");
 					}
-
+				}
+				// 否則如果第i個對話資料.第x個對話數.對話類別為"結束" 且 當前ID 等於 第i個對話資料.第x個對話數.對話編號 的話 才執行
+				else if (dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.結束 && currentDialogueID ==
+						 dialogueData[i].dialogueTotalList[x].dialogueID)
+				{
+					// 玩家按下繼續按鈕後 清空對話內容
+					textContent.text = "";
+					// 隱藏繼續圖示
+					continueIcon.SetActive(false);
 					optionButton.SetActive(false);
+					// 玩家按下繼續按鈕後 如果對話內容為空 則對話者名稱為空
+					if (textContent.text == "")
+						textTalker.text = "";
+					// 隱藏角色圖示
+					dialogueImage_left.transform.localScale = Vector3.zero;
+					dialogueImage_right.transform.localScale = Vector3.zero;
+					// 如果對話段落已結束 就關閉對話介面
+					//for (int j = 0; j < dialogueData[i].dialogueTotalList.Count; j++)
+					//{
+					//	if (j == dialogueData[i].dialogueTotalList[j].toDialogueOrOptionID.Length) dialogieUI.alpha -= (100 * Time.deltaTime);
+					//}
+				}
+			}
+		}
+	}
+
+	void hideDialogueUI(float _vanishMultiple)
+	{
+		_vanishMultiple = vanishMultiple;
+		for (int i = 0; i < dialogueData.Length; i++)
+		{
+			for (int x = 0; x < dialogueData[i].dialogueTotalList.Count; x++)
+			{
+				if (dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.結束 && currentDialogueID ==
+						 dialogueData[i].dialogueTotalList[x].dialogueID)
+				{
+					for (int y = 1; y <= 5; y++)
+					{
+						// 隱藏角色圖示
+						//dialogueImage_left.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f - (_vanishMultiple * Time.deltaTime));
+						//dialogueImage_right.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f - (_vanishMultiple * Time.deltaTime));
+					}
+
+					// 如果對話段落已結束 就關閉對話介面
+					for (int j = 0; j < dialogueData[i].dialogueTotalList.Count; j++)
+					{
+						if (j == dialogueData[i].dialogueTotalList[j].toDialogueOrOptionID.Length) dialogieUI.alpha -= (_vanishMultiple * Time.deltaTime);
+					}
 				}
 			}
 		}

@@ -8,6 +8,11 @@
 /// </summary>
 public class DialogueManager : MonoBehaviour
 {
+	[Tooltip("是否自動播放")]
+	public bool isAutoplay = false;
+	[Tooltip("是否隱藏對話框")]
+	public bool isHideDialogue = false;
+
 	public static DialogueManager instance = null;
 
 	private void Awake()
@@ -20,7 +25,7 @@ public class DialogueManager : MonoBehaviour
 	/// </summary>
 	public void HideDialogue()
 	{
-		DialogueSystem.instance.isHideDialogue = true;
+		isHideDialogue = true;
 		DialogueSystem.instance.dialogieUI.alpha = 0;
 	}
 
@@ -29,7 +34,7 @@ public class DialogueManager : MonoBehaviour
 	/// </summary>
 	public void AutoPlay()
 	{
-		DialogueSystem.instance.isAutoplay = true;
+		isAutoplay = true;
 		Debug.Log("<color=#906>正在自動播放</color>");
 	}
 

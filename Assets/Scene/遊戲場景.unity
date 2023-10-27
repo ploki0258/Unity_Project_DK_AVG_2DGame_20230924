@@ -814,7 +814,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -123.6, y: -50}
+  m_AnchoredPosition: {x: -131, y: -50}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &340901365
@@ -886,7 +886,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1355,7 +1355,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -568, y: -50}
+  m_AnchoredPosition: {x: -580, y: -50}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &587702477
@@ -1606,7 +1606,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 298.6, y: -50}
+  m_AnchoredPosition: {x: 323, y: -50}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &792131584
@@ -1944,7 +1944,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -346.2, y: -50}
+  m_AnchoredPosition: {x: -359, y: -50}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &930728968
@@ -2420,7 +2420,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 555.9, y: -50}
+  m_AnchoredPosition: {x: 569, y: -50}
   m_SizeDelta: {x: 250, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1059903301
@@ -2841,7 +2841,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 93.8, y: -50}
+  m_AnchoredPosition: {x: 96, y: -50}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1367628794
@@ -3048,14 +3048,13 @@ MonoBehaviour:
   dialogueImage_right: {fileID: 802472937}
   optionButton: {fileID: 8126545446569874045, guid: a9abafd92e8096d4f837741316533e4c, type: 3}
   dialoguePos: {fileID: 672075810}
+  vanishMultiple: 2.5
   characteName:
-  - "\u5C0F\u5149"
   - "\u5C0F\u611B"
+  - "\u5C0F\u5149"
   characterImages:
-  - {fileID: 802472937}
   - {fileID: 1652230996}
-  isAutoplay: 0
-  isHideDialogue: 0
+  - {fileID: 802472937}
 --- !u!1 &1543700454
 GameObject:
   m_ObjectHideFlags: 0
@@ -3085,6 +3084,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2f81b8001a95646b9b6dfe679596e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isAutoplay: 0
+  isHideDialogue: 0
 --- !u!4 &1543700456
 Transform:
   m_ObjectHideFlags: 0
@@ -3885,7 +3886,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 27493483414fb034d8a433e1d683d055, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 55d5c6e74e43f4d4e96d8d7ddc576cd4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

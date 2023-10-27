@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueTotalList:
   - dialogueID: 3
-    toDialogueOrOptionID: 04000000
+    toDialogueOrOptionID: ffffffff
     dialogueType: 0
     characterPos: 4
     dialogueTalkerName: "\u5C0F\u5149"
