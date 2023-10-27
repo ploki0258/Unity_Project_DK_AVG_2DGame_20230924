@@ -38,8 +38,6 @@ public struct dialogue
 	public string dialogueTalkerName;
 	[Header("對話/選項內容陣列"), TextArea(3, 5)]
 	public string[] dialogueContents;
-	//[Header("選項個數"), Range(0, 5)]
-	//public int optionCount = 0;
 	//[Header("選項內容"), TextArea(2, 5)]
 	//public string[] optionContents = { "" };
 	[Header("對話效果欄位\n\n對話效果種類")]

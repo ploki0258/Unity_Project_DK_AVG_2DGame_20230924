@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 /// <summary>
 /// 管理對話系統的操作：
@@ -27,7 +28,10 @@ public class DialogueManager : MonoBehaviour
 	{
 		isHideDialogue = true;
 		DialogueSystem.instance.dialogieUI.alpha = 0;
+		Debug.Log("<color=#906>隱藏對話框...</color>");
 	}
+
+	public Action dialogueHideChange;
 
 	/// <summary>
 	/// 自動顯示對話

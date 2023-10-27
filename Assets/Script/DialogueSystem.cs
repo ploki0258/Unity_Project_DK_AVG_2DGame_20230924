@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 /// <summary>
 /// 對話系統：
@@ -59,7 +60,9 @@ public class DialogueSystem : MonoBehaviour
 	[Header("角色圖示列表")]
 	public List<Image> characterImages = new List<Image>();
 
-	private bool cancelTyping;
+	private bool cancelTyping = false;
+	[Tooltip("是否在進行對話")]
+	private bool isTalking = false;
 	#endregion
 
 	private void Awake()
@@ -76,27 +79,24 @@ public class DialogueSystem : MonoBehaviour
 
 	private void Start()
 	{
+		//talkerShowChange += isTalkerShow;
+		DialogueManager.instance.dialogueHideChange += hideDialogueUI;
 		StartDialogue();
+	}
+
+	private void OnDisable()
+	{
+		//talkerShowChange -= isTalkerShow;
+		DialogueManager.instance.dialogueHideChange -= hideDialogueUI;
 	}
 
 	private void Update()
 	{
 		Debug.Log($"<color=Green>當前ID：{currentDialogueID}</color>");
-		// 如果 對話框隱藏時
-		if (DialogueManager.instance.isHideDialogue == true)
-		{
-			// 如果 按下滑鼠左鍵
-			if (Input.GetKeyDown(KeyCode.Mouse0))
-			{
-				// 顯示對話畫布 透明度為1
-				dialogieUI.alpha = 1;
 
-				// 是否隱藏對話框 = false
-				DialogueManager.instance.isHideDialogue = false;
-			}
-		}
-
-		hideDialogueUI(vanishMultiple);
+		vanishDialogueUI(vanishMultiple);
+		hideDialogueUI();
+		//quickShowDialogue();
 	}
 
 	/// <summary>
@@ -107,12 +107,96 @@ public class DialogueSystem : MonoBehaviour
 		StartCoroutine(DisplayEveryDialogue());
 	}
 
+	void isTalkerShow()
+	{
+		//talkerShow = talkerShow;
+	}
+
+	/*public TalkerShow talkerShow
+	{
+		get { return _talkerShow; }
+		set
+		{
+			_talkerShow = value;
+
+			for (int i = 0; i < dialogueData.Length; i++)
+			{
+				for (int j = 0; j < dialogueData[i].dialogueTotalList.Count; j++)
+				{
+					if (_talkerShow == TalkerShow.兩人_左邊)
+					{
+						dialogueImage_left.transform.localScale = Vector3.one;
+						dialogueImage_right.transform.localScale = Vector3.one;
+						dialogueImage_left = characterImagesDic[dialogueData[i].dialogueTotalList[j].dialogueTalkerName];
+						for (int x = 1; x <= 5; x++)
+						{
+							dialogueImage_left.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 1f);
+							dialogueImage_right.GetComponentsInChildren<Image>()[x].color = new Color(0.7f, 0.7f, 0.7f, 0.7f);
+						}
+					}
+					else if (_talkerShow == TalkerShow.兩人_右邊)
+					{
+						dialogueImage_right.transform.localScale = Vector3.one;
+						dialogueImage_left.transform.localScale = Vector3.one;
+						dialogueImage_right = characterImagesDic[dialogueData[i].dialogueTotalList[j].dialogueTalkerName];
+						for (int x = 1; x <= 5; x++)
+						{
+							dialogueImage_right.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 1f);
+							dialogueImage_left.GetComponentsInChildren<Image>()[x].color = new Color(0.7f, 0.7f, 0.7f, 0.7f);
+						}
+					}
+					else if (_talkerShow == TalkerShow.兩人_一起)
+					{
+						dialogueImage_left.transform.localScale = Vector3.one;
+						dialogueImage_right.transform.localScale = Vector3.one;
+						for (int x = 1; x <= 5; x++)
+						{
+							dialogueImage_left.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 1f);
+							dialogueImage_right.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 1f);
+						}
+					}
+					else if (_talkerShow == TalkerShow.左邊)
+					{
+						dialogueImage_left.transform.localScale = Vector3.one;
+						dialogueImage_right.transform.localScale = Vector3.zero;
+						dialogueImage_left = characterImagesDic[dialogueData[i].dialogueTotalList[j].dialogueTalkerName];
+						for (int x = 1; x <= 5; x++)
+						{
+							dialogueImage_left.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 1f);
+						}
+					}
+					else if (_talkerShow == TalkerShow.右邊)
+					{
+						dialogueImage_right.transform.localScale = Vector3.one;
+						dialogueImage_left.transform.localScale = Vector3.zero;
+						dialogueImage_right = characterImagesDic[dialogueData[i].dialogueTotalList[j].dialogueTalkerName];
+						for (int x = 1; x <= 5; x++)
+						{
+							dialogueImage_right.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 1f);
+						}
+					}
+					else if (_talkerShow == TalkerShow.無顯示)
+					{
+						dialogueImage_right.transform.localScale = Vector3.zero;
+						dialogueImage_left.transform.localScale = Vector3.zero;
+					}
+				}
+			}
+
+			if (talkerShowChange != null)
+				talkerShowChange.Invoke();
+		}
+	}
+	TalkerShow _talkerShow = TalkerShow.無顯示;
+	public Action talkerShowChange = null;*/
+
 	/// <summary>
 	/// 顯示每段對話：並在段落之間等待玩家按下繼續按鍵
 	/// </summary>
 	/// <returns></returns>
 	private IEnumerator DisplayEveryDialogue()
 	{
+		isTalking = true;
 		// 顯示對話畫布 透明度為1
 		dialogieUI.alpha = 1;
 		// 清空對話內容
@@ -221,25 +305,24 @@ public class DialogueSystem : MonoBehaviour
 						// 如果 沒有隱藏對話框的話
 						if (DialogueManager.instance.isHideDialogue == false)
 						{
-							// 如果 沒有自動播放的話
-							if (DialogueManager.instance.isAutoplay == false)
+							// 如果 正在進行自動播放的話
+							if (DialogueManager.instance.isAutoplay == true)
 							{
-								// 等待玩家按下指定的按鍵 來繼續下段對話
-								while (!(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0)))
-								{
-									// null 為每一幀的時間
-									yield return null;
-								}
+								yield return new WaitForSeconds(1f);	
 							}
-							else if (DialogueManager.instance.isAutoplay)
+							
+							// 等待玩家按下指定的按鍵 來繼續下段對話
+							// 沒按下指定的按鍵 且 正在對話中 且 沒有自動播放時 等待玩家繼續
+							while (!(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0)) && isTalking == true && DialogueManager.instance.isAutoplay == false)
 							{
-								continue;
+								// null 為每一幀的時間
+								yield return null;
 							}
 						}
-						else if (DialogueManager.instance.isAutoplay == true)
+						else if (DialogueManager.instance.isHideDialogue == true)
 						{
-							Debug.Log("自動播放中");
-							//yield return new WaitForSeconds(0.3f);
+							Debug.Log("對話框隱藏中，停止顯示對話");
+							yield break;
 						}
 
 						// 玩家按下繼續按鈕後 清空對話內容
@@ -311,8 +394,8 @@ public class DialogueSystem : MonoBehaviour
 					if (textContent.text == "")
 						textTalker.text = "";
 					// 隱藏角色圖示
-					dialogueImage_left.transform.localScale = Vector3.zero;
-					dialogueImage_right.transform.localScale = Vector3.zero;
+					//dialogueImage_left.transform.localScale = Vector3.zero;
+					//dialogueImage_right.transform.localScale = Vector3.zero;
 					// 如果對話段落已結束 就關閉對話介面
 					//for (int j = 0; j < dialogueData[i].dialogueTotalList.Count; j++)
 					//{
@@ -321,9 +404,14 @@ public class DialogueSystem : MonoBehaviour
 				}
 			}
 		}
+		isTalking = false;
 	}
 
-	void hideDialogueUI(float _vanishMultiple)
+	/// <summary>
+	/// 對話UI與角色逐漸消失
+	/// </summary>
+	/// <param name="_vanishMultiple">消失倍數</param>
+	void vanishDialogueUI(float _vanishMultiple)
 	{
 		_vanishMultiple = vanishMultiple;
 		for (int i = 0; i < dialogueData.Length; i++)
@@ -335,18 +423,47 @@ public class DialogueSystem : MonoBehaviour
 				{
 					for (int y = 1; y <= 5; y++)
 					{
-						// 隱藏角色圖示
-						//dialogueImage_left.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f - (_vanishMultiple * Time.deltaTime));
-						//dialogueImage_right.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f - (_vanishMultiple * Time.deltaTime));
+						// 讓角色圖示慢慢消失
+						dialogueImage_left.GetComponentsInChildren<Image>()[y].color -= new Color(0f, 0f, 0f, _vanishMultiple * Time.deltaTime);
+						dialogueImage_right.GetComponentsInChildren<Image>()[y].color -= new Color(0f, 0f, 0f, _vanishMultiple * Time.deltaTime);
 					}
 
-					// 如果對話段落已結束 就關閉對話介面
+					// 如果對話已結束 就讓對話介面慢慢消失
 					for (int j = 0; j < dialogueData[i].dialogueTotalList.Count; j++)
 					{
 						if (j == dialogueData[i].dialogueTotalList[j].toDialogueOrOptionID.Length) dialogieUI.alpha -= (_vanishMultiple * Time.deltaTime);
 					}
 				}
 			}
+		}
+	}
+
+	void hideDialogueUI()
+	{
+		// 如果 對話框隱藏時
+		if (DialogueManager.instance.isHideDialogue == true)
+		{
+			// 如果 按下滑鼠左鍵
+			if (Input.GetKeyDown(KeyCode.Mouse0))
+			{
+				// 顯示對話畫布 透明度為1
+				dialogieUI.alpha = 1;
+
+				// 是否隱藏對話框 = false
+				DialogueManager.instance.isHideDialogue = false;
+			}
+		}
+	}
+
+	void quickShowDialogue()
+	{
+		if (isTalking == true && !cancelTyping)
+		{
+			isTalking = false;
+		}
+		else if (!isTalking)
+		{
+			cancelTyping = !cancelTyping;
 		}
 	}
 }
