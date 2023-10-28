@@ -60,6 +60,7 @@ public class DialogueSystem : MonoBehaviour
 	[Header("角色圖示列表")]
 	public List<Image> characterImages = new List<Image>();
 
+	[Tooltip("是否取消打字")]
 	private bool cancelTyping = false;
 	[Tooltip("是否在進行對話")]
 	private bool isTalking = false;
@@ -96,7 +97,7 @@ public class DialogueSystem : MonoBehaviour
 
 		vanishDialogueUI(vanishMultiple);
 		hideDialogueUI();
-		//quickShowDialogue();
+		quickShowDialogue();
 	}
 
 	/// <summary>
@@ -290,6 +291,7 @@ public class DialogueSystem : MonoBehaviour
 					for (int j = 0; j < dialogueData[i].dialogueTotalList[x].dialogueContents.Length; j++)
 					{
 						// 第四個迴圈跑第i個對話資料中的對話總表的第x個對話數的第j個對話內容中 總共有幾個字_k
+						// 逐字顯示
 						for (int k = 0; k < dialogueData[i].dialogueTotalList[x].dialogueContents[j].Length; k++)
 						{
 							Debug.Log(dialogueData[i].dialogueTotalList[x].dialogueContents[j][k]);
@@ -297,6 +299,11 @@ public class DialogueSystem : MonoBehaviour
 							textContent.text += dialogueData[i].dialogueTotalList[x].dialogueContents[j][k];
 							// 打字間隔
 							yield return new WaitForSeconds(interval);
+
+							//if (cancelTyping)
+							//{
+							//	textContent.text = dialogueData[i].dialogueTotalList[x].dialogueContents[j];
+							//}
 						}
 
 						// 每段對話完成後顯示繼續圖示
@@ -308,12 +315,13 @@ public class DialogueSystem : MonoBehaviour
 							// 如果 正在進行自動播放的話
 							if (DialogueManager.instance.isAutoplay == true)
 							{
-								yield return new WaitForSeconds(1f);	
+								yield return new WaitForSeconds(1f);
 							}
-							
+
 							// 等待玩家按下指定的按鍵 來繼續下段對話
 							// 沒按下指定的按鍵 且 正在對話中 且 沒有自動播放時 等待玩家繼續
-							while (!(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0)) && isTalking == true && DialogueManager.instance.isAutoplay == false)
+							while (!(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0))
+								&& isTalking == true && DialogueManager.instance.isAutoplay == false)
 							{
 								// null 為每一幀的時間
 								yield return null;
@@ -438,6 +446,9 @@ public class DialogueSystem : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// 隱藏對話框
+	/// </summary>
 	void hideDialogueUI()
 	{
 		// 如果 對話框隱藏時
@@ -455,13 +466,12 @@ public class DialogueSystem : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// 對話內容快速顯示
+	/// </summary>
 	void quickShowDialogue()
 	{
-		if (isTalking == true && !cancelTyping)
-		{
-			isTalking = false;
-		}
-		else if (!isTalking)
+		if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0))
 		{
 			cancelTyping = !cancelTyping;
 		}

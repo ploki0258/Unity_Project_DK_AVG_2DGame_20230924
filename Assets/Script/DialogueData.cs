@@ -22,7 +22,7 @@ public class DialogueData : ScriptableObject
 }
 
 [System.Serializable]
-public struct dialogue
+public class dialogue
 {
 	[Header("對話內容欄位\n\n對話編號"), Tooltip("對話或選項的ID")]
 	public int dialogueID;
@@ -31,21 +31,21 @@ public struct dialogue
 	//[Header("選項編號跳轉至"), Tooltip("要跳轉到的對話或選項ID")]
 	//public int[] toOptionID;
 	[Header("對話種類")]
-	public DialogueType dialogueType;
+	public DialogueType dialogueType = DialogueType.對話;
 	[Header("角色位置"), Tooltip("角色位置顯示的狀態")]
-	public TalkerShow characterPos;
+	public TalkerShow characterPos = TalkerShow.無顯示;
 	[Header("對話者名稱")]
-	public string dialogueTalkerName;
+	public string dialogueTalkerName = "";
 	[Header("對話/選項內容陣列"), TextArea(3, 5)]
-	public string[] dialogueContents;
+	public string[] dialogueContents = new string[1];
 	//[Header("選項內容"), TextArea(2, 5)]
 	//public string[] optionContents = { "" };
 	[Header("對話效果欄位\n\n對話效果種類")]
-	public EffectType[] effectType;
+	public EffectType[] effectType = { EffectType.無效果 };
 	[Header("效果對象名稱")]
 	public string[] effectTargetName;
 	[Header("好感度/體力值"), Range(0, 100), Tooltip("可提升或降低好感度或體力值的數值")]
-	public float[] effectValue;
+	public float[] effectValue = { 0 };
 	//[Header("體力值"), Range(0, 100), Tooltip("可提升或降低體力值的數值")]
 	//public float strength;
 }
@@ -57,7 +57,7 @@ public enum TalkerShow
 
 public enum DialogueType
 {
-	對話, 選項, 結束
+	對話, 選項, 重要, 結束
 }
 
 public enum EffectType

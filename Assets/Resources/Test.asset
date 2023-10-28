@@ -10,17 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53ad2fed0d70d4e4a9cccb7e73ab9616, type: 3}
-  m_Name: "\u6E2C\u8A66\u5C0D\u8A71End"
+  m_Name: Test
   m_EditorClassIdentifier: 
   dialogueTotalList:
-  - dialogueID: -1
+  - dialogueID: 0
     toDialogueOrOptionID: 
     dialogueType: 3
-    characterPos: 5
+    characterPos: 0
     dialogueTalkerName: 
-    dialogueContents:
-    - 
-    - 
+    dialogueContents: []
     effectType: 
     effectTargetName: []
     effectValue: []

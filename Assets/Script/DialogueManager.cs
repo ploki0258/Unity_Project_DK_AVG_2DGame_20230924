@@ -38,8 +38,17 @@ public class DialogueManager : MonoBehaviour
 	/// </summary>
 	public void AutoPlay()
 	{
-		isAutoplay = true;
-		Debug.Log("<color=#906>正在自動播放</color>");
+		for (int i = 0; i < DialogueSystem.instance.dialogueData.Length; i++)
+		{
+			for (int j = 0; j < DialogueSystem.instance.dialogueData[i].dialogueTotalList.Count; j++)
+			{
+				if (DialogueSystem.instance.dialogueData[i].dialogueTotalList[j].dialogueType == DialogueType.對話)
+				{
+					isAutoplay = true;
+					Debug.Log("<color=#906>正在自動播放</color>");
+				}
+			}
+		}
 	}
 
 	/// <summary>
