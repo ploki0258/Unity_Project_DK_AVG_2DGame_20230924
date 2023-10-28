@@ -16,10 +16,9 @@ MonoBehaviour:
   - dialogueID: -1
     toDialogueOrOptionID: 
     dialogueType: 2
-    characterPos: 5
+    characterPos: 2
     dialogueTalkerName: 
     dialogueContents: []
-    effectType: 0
-    effectTargetName: 
-    favorability: 0
-    strength: 0
+    effectType: 
+    effectTargetName: []
+    effectValue: []

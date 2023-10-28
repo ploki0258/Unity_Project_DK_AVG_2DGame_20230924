@@ -41,13 +41,13 @@ public struct dialogue
 	//[Header("選項內容"), TextArea(2, 5)]
 	//public string[] optionContents = { "" };
 	[Header("對話效果欄位\n\n對話效果種類")]
-	public EffectType effectType;
+	public EffectType[] effectType;
 	[Header("效果對象名稱")]
-	public string effectTargetName;
-	[Header("好感度"), Range(0, 100), Tooltip("可提升或降低好感度的數值")]
-	public float favorability;
-	[Header("體力值"), Range(0, 100), Tooltip("可提升或降低體力值的數值")]
-	public float strength;
+	public string[] effectTargetName;
+	[Header("好感度/體力值"), Range(0, 100), Tooltip("可提升或降低好感度或體力值的數值")]
+	public float[] effectValue;
+	//[Header("體力值"), Range(0, 100), Tooltip("可提升或降低體力值的數值")]
+	//public float strength;
 }
 
 public enum TalkerShow
