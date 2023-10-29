@@ -24,11 +24,34 @@ public class DialogueManager : MonoBehaviour
 	/// <summary>
 	/// 隱藏對話框
 	/// </summary>
-	public void HideDialogue()
+	public void HideDialogueUI()
 	{
-		isHideDialogue = true;
-		DialogueSystem.instance.dialogieUI.alpha = 0;
-		Debug.Log("<color=#906>隱藏對話框...</color>");
+		if (isHideDialogue == false)
+		{
+			isHideDialogue = true;
+			DialogueSystem.instance.dialogieUI.alpha = 0;
+			Debug.Log("<color=#906>隱藏對話框...</color>");
+		}
+	}
+
+	/// <summary>
+	/// 顯示對話框
+	/// </summary>
+	public void ShowDialogueUI()
+	{
+		// 如果 對話框隱藏時
+		if (isHideDialogue == true)
+		{
+			// 如果 按下指定按鍵
+			if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return))
+			{
+				// 顯示對話畫布 透明度為1
+				DialogueSystem.instance.dialogieUI.alpha = 1;
+
+				// 是否隱藏對話框 = false
+				isHideDialogue = false;
+			}
+		}
 	}
 
 	public Action dialogueHideChange;

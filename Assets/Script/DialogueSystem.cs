@@ -81,14 +81,14 @@ public class DialogueSystem : MonoBehaviour
 	private void Start()
 	{
 		//talkerShowChange += isTalkerShow;
-		DialogueManager.instance.dialogueHideChange += hideDialogueUI;
+		DialogueManager.instance.dialogueHideChange += DialogueManager.instance.ShowDialogueUI;
 		StartDialogue();
 	}
 
 	private void OnDisable()
 	{
 		//talkerShowChange -= isTalkerShow;
-		DialogueManager.instance.dialogueHideChange -= hideDialogueUI;
+		DialogueManager.instance.dialogueHideChange -= DialogueManager.instance.ShowDialogueUI;
 	}
 
 	private void Update()
@@ -96,7 +96,7 @@ public class DialogueSystem : MonoBehaviour
 		Debug.Log($"<color=Green>當前ID：{currentDialogueID}</color>");
 
 		vanishDialogueUI(vanishMultiple);
-		hideDialogueUI();
+		DialogueManager.instance.ShowDialogueUI();
 		quickShowDialogue();
 	}
 
@@ -442,26 +442,6 @@ public class DialogueSystem : MonoBehaviour
 						if (j == dialogueData[i].dialogueTotalList[j].toDialogueOrOptionID.Length) dialogieUI.alpha -= (_vanishMultiple * Time.deltaTime);
 					}
 				}
-			}
-		}
-	}
-
-	/// <summary>
-	/// 隱藏對話框
-	/// </summary>
-	void hideDialogueUI()
-	{
-		// 如果 對話框隱藏時
-		if (DialogueManager.instance.isHideDialogue == true)
-		{
-			// 如果 按下滑鼠左鍵
-			if (Input.GetKeyDown(KeyCode.Mouse0))
-			{
-				// 顯示對話畫布 透明度為1
-				dialogieUI.alpha = 1;
-
-				// 是否隱藏對話框 = false
-				DialogueManager.instance.isHideDialogue = false;
 			}
 		}
 	}

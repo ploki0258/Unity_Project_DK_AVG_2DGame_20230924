@@ -16,11 +16,13 @@ MonoBehaviour:
   - dialogueID: 0
     toDialogueOrOptionID: 01000000
     dialogueType: 0
-    characterPos: 5
+    characterPos: 0
     dialogueTalkerName: "\u65C1\u767D"
     dialogueContents:
     - "\u9019\u662F\u500B\u8D77\u59CB\u5C0D\u8A71\uFF0C\u53EF\u9EDE\u64CA\u6309\u9215\u7E7C\u7E8C\u89C0\u770B~"
     - "[\u4E0B\u4E00\u6BB5\u5C0D\u8A71\uFF1A\u6ED1\u9F20\u5DE6\u9375\u3001Enter\u9375\u3001\u7A7A\u767D\u9375]"
-    effectType: 
-    effectTargetName: []
-    effectValue: []
+    effectType: 00000000
+    effectTargetName:
+    - 
+    effectValue:
+    - 0

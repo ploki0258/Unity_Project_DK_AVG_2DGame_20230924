@@ -52,7 +52,7 @@ public class dialogue
 
 public enum TalkerShow
 {
-	左邊, 右邊, 兩人_一起, 兩人_左邊, 兩人_右邊, 無顯示
+	無顯示, 左邊, 右邊, 兩人_左邊, 兩人_右邊, 兩人_一起
 }
 
 public enum DialogueType
