@@ -11,10 +11,17 @@ public class MenuManager : MonoBehaviour
 		instance = this;
 	}
 	#endregion
+	[SerializeField] Scene scene;
 
 	public void StartGame()
+	{
+		SceneManager.LoadScene("遊戲場景");
+	}
+
+	public void RestartGame()
     {
-        SceneManager.LoadScene("遊戲場景");
+		scene = SceneManager.GetActiveScene();
+		SceneManager.LoadScene(scene.name);
 	}
 
     public void Quit()
