@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53ad2fed0d70d4e4a9cccb7e73ab9616, type: 3}
   m_Name: New_DialogueData
   m_EditorClassIdentifier: 
-  dialogueID: 0
-  toDialogueID: 0
-  toOptionID: 
-  dialogueType: 0
-  characterPos: 5
-  dialogueTalkerName: 
-  dialogueContents: []
-  effectType: 0
-  effectTargetName: 
-  favorability: 0
-  strength: 0
+  dialogueTotalList:
+  - dialogueID: 0
+    toDialogueOrOptionID: 
+    dialogueType: 0
+    characterPos: 0
+    dialogueTalkerName: 
+    dialogueContents:
+    - 
+    effectType: 
+    effectTargetName: []
+    effectValue: []
