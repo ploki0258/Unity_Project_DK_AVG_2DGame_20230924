@@ -72,3 +72,5 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 Assets/Scene/遊戲場景.unity
 *.unity
+*.unity
+*.unity
