@@ -4168,11 +4168,15 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1533400010}
   m_Enabled: 1
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   m_Alpha: 0.99
 =======
   m_Alpha: 0
 >>>>>>> Stashed changes
+=======
+  m_Alpha: 1
+>>>>>>> parent of f75b55f (Update 20231125修改對話紀錄系統)
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -4214,7 +4218,7 @@ MonoBehaviour:
   basemapTextContentBefore: {fileID: 612392741}
   textTalkerBefore: {fileID: 229410987}
   textContentBefore: {fileID: 1157826962}
-  dialogueLogPrefab: {fileID: 8655790312572690840}
+  dialogueBeforePrefab: {fileID: 8655790312572690840}
   basemapImages:
   - {r: 1, g: 0, b: 0.28504562, a: 0.56078434}
   - {r: 0.046279836, g: 0.05669804, b: 0.754717, a: 0.56078434}
@@ -5121,8 +5125,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 005f603e0bd98104da2dfb2db0566c98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scene:
-    m_Handle: 0
 --- !u!4 &1908613584
 Transform:
   m_ObjectHideFlags: 0
