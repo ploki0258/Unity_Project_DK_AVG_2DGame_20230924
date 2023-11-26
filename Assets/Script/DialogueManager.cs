@@ -26,7 +26,6 @@ public class DialogueManager : MonoBehaviour
 	private GameObject autoplayButton = null;
 	[SerializeField, Header("自動播放按鈕顏色")]
 	private Color changeColor;
-
 	[SerializeField, Header("之前對話人名底圖")]
 	Image basemapTextTalkerBefore = null;
 	[SerializeField, Header("之前對話內容底圖")]
@@ -36,7 +35,7 @@ public class DialogueManager : MonoBehaviour
 	[SerializeField, Header("之前對話內容")]
 	TextMeshProUGUI textContentBefore = null;
 	[SerializeField, Header("之前對話紀錄")]
-	GameObject dialogueLogPrefab = null;
+	GameObject dialogueBeforePrefab = null;
 	[Header("底圖顏色列表")]
 	public Color[] basemapImages = new Color[0];
 
@@ -96,17 +95,14 @@ public class DialogueManager : MonoBehaviour
 		}
 	}
 
-	/// <summary>
-	/// 顯示之前對話記錄介面
-	/// </summary>
 	void ShowDialogueLogUI()
 	{
 		if (isHideDialogueLogUI == true)
 		{
-			DialogueSystem.instance.enabled = false;
 			isHideDialogueLogUI = false;
 			dialogieLogUI_CG.gameObject.SetActive(true);
 			dialogieLogUI_CG.alpha = 1f;
+			DialogueSystem.instance.enabled = false;
 		}/*
 		else if (Input.GetKeyDown(KeyCode.Escape) && isHideDialogueLogUI == false)
 		{
@@ -183,25 +179,10 @@ public class DialogueManager : MonoBehaviour
 	public void dialogueLogContent()
 	{
 		ShowDialogueLogUI();
-		for (int i = 0; i < DialogueSystem.instance.dialogueData.Length; i++)
-		{
-			for (int j = 0; j < DialogueSystem.instance.dialogueData[i].dialogueTotalList.Count; j++)
-			{
-				for (int k = 0; k < DialogueSystem.instance.dialogueData[i].dialogueTotalList[j].dialogueContents.Length; k++)
-				{
-					if (DialogueSystem.instance.dialogueData[i].dialogueTotalList[j].dialogueTalkerName == "")
-						return;
-
-					Instantiate(dialogueLogPrefab, dialogieLogUI.transform);
-
-					textTalkerBefore.text = DialogueSystem.instance.dialogueData[i].dialogueTotalList[j].dialogueTalkerName;
-					textContentBefore.text = DialogueSystem.instance.dialogueData[i].dialogueTotalList[j].dialogueContents[k].ToString();
-					basemapTextTalkerBefore.color = characterBasemapDic[DialogueSystem.instance.dialogueData[i].dialogueTotalList[j].dialogueTalkerName];
-					//Debug.Log("回想人名：" + DialogueSystem.instance.dialogueData[i].dialogueTotalList[j].dialogueTalkerName);
-					basemapTextContentBefore.color = characterBasemapDic[DialogueSystem.instance.dialogueData[i].dialogueTotalList[j].dialogueTalkerName];
-				}
-			}
-		}
+		textTalkerBefore.text = DialogueSystem.instance.dialogueData[0].dialogueTotalList[0].dialogueTalkerName;
+		//textContentBefore.text = DialogueSystem.instance.dialogueData[0].dialogueTotalList[0].dialogueContents[0].ToString();
+		basemapTextTalkerBefore.color = characterBasemapDic[DialogueSystem.instance.dialogueData[0].dialogueTotalList[0].dialogueTalkerName];
+		basemapTextContentBefore.color = characterBasemapDic[DialogueSystem.instance.dialogueData[0].dialogueTotalList[0].dialogueTalkerName];
 	}
 
 	public void CloseButton()
