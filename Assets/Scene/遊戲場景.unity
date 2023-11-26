@@ -4168,7 +4168,11 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1533400010}
   m_Enabled: 1
+<<<<<<< Updated upstream
   m_Alpha: 0.99
+=======
+  m_Alpha: 0
+>>>>>>> Stashed changes
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
