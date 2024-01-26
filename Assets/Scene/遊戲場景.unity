@@ -4168,15 +4168,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1533400010}
   m_Enabled: 1
-<<<<<<< HEAD
-<<<<<<< Updated upstream
   m_Alpha: 0.99
-=======
-  m_Alpha: 0
->>>>>>> Stashed changes
-=======
-  m_Alpha: 1
->>>>>>> parent of f75b55f (Update 20231125修改對話紀錄系統)
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
