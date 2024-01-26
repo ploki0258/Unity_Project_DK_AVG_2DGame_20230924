@@ -1,9 +1,9 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
-	#region ³æ¨Ò
+	#region å–®ä¾‹
 	public static MenuManager instance;
 
 	private void Awake()
@@ -11,11 +11,12 @@ public class MenuManager : MonoBehaviour
 		instance = this;
 	}
 	#endregion
+
 	[SerializeField] Scene scene;
 
 	public void StartGame()
 	{
-		SceneManager.LoadScene("¹CÀ¸³õ´º");
+		SceneManager.LoadScene("éŠæˆ²å ´æ™¯");
 	}
 
 	public void RestartGame()
