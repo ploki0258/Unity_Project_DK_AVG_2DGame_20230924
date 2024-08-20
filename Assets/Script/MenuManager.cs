@@ -3,6 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
+	[SerializeField] Scene scene;
+
 	#region 單例
 	public static MenuManager instance;
 
@@ -11,8 +13,6 @@ public class MenuManager : MonoBehaviour
 		instance = this;
 	}
 	#endregion
-
-	[SerializeField] Scene scene;
 
 	public void StartGame()
 	{

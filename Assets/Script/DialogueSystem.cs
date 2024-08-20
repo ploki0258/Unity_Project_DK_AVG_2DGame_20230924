@@ -90,7 +90,7 @@ public class DialogueSystem : MonoBehaviour
 
 	private void Update()
 	{
-		Debug.Log($"<color=Green>當前ID：{currentDialogueID}</color>");
+		//Debug.Log($"<color=Green>當前ID：{currentDialogueID}</color>");
 
 		vanishDialogueUI(vanishMultiple);
 		quickShowDialogue();
@@ -289,7 +289,7 @@ public class DialogueSystem : MonoBehaviour
 						// 逐字顯示
 						for (int k = 0; k < dialogueData[i].dialogueTotalList[x].dialogueContents[j].Length; k++)
 						{
-							Debug.Log(dialogueData[i].dialogueTotalList[x].dialogueContents[j][k]);
+							//Debug.Log(dialogueData[i].dialogueTotalList[x].dialogueContents[j][k]); // 顯示字
 							// 更新對話內容
 							textContent.text += dialogueData[i].dialogueTotalList[x].dialogueContents[j][k];
 							// 打字間隔
