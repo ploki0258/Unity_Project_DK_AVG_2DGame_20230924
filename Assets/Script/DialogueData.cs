@@ -37,7 +37,7 @@ public class dialogue
 	[Header("對話者名稱")]
 	public string dialogueTalkerName = "";
 	[Header("對話/選項內容陣列"), TextArea(3, 5)]
-	public string[] dialogueContents = new string[1];
+	public string[] dialogueContents = new string[0];
 	//[Header("選項內容"), TextArea(2, 5)]
 	//public string[] optionContents = { "" };
 	[Header("對話效果欄位\n\n對話效果種類")]

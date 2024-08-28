@@ -192,4 +192,6 @@ public class DialogueManager : MonoBehaviour
 		dialogieLogUI_CG.alpha = 0f;
 		DialogueSystem.instance.enabled = true;
 	}
+
+
 }

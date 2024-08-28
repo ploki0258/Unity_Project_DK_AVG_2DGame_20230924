@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using Unity.VisualScripting;
 
 /// <summary>
 /// 對話系統：
@@ -77,14 +78,12 @@ public class DialogueSystem : MonoBehaviour
 
 	private void Start()
 	{
-		//talkerShowChange += isTalkerShow;
 		DialogueManager.instance.dialogueHideChange += DialogueManager.instance.ShowDialogueUI;
 		StartDialogue();
 	}
 
 	private void OnDisable()
 	{
-		//talkerShowChange -= isTalkerShow;
 		DialogueManager.instance.dialogueHideChange -= DialogueManager.instance.ShowDialogueUI;
 	}
 
@@ -104,12 +103,10 @@ public class DialogueSystem : MonoBehaviour
 		StartCoroutine(DisplayEveryDialogue());
 	}
 
-	void isTalkerShow()
-	{
-		//talkerShow = talkerShow;
-	}
-
-	/*public TalkerShow talkerShow
+	/// <summary>
+	/// 對話人物顯示
+	/// </summary>
+	public TalkerShow TalkerShow
 	{
 		get { return _talkerShow; }
 		set
@@ -120,7 +117,32 @@ public class DialogueSystem : MonoBehaviour
 			{
 				for (int j = 0; j < dialogueData[i].dialogueTotalList.Count; j++)
 				{
-					if (_talkerShow == TalkerShow.兩人_左邊)
+					switch (value)
+					{
+						case TalkerShow.無顯示:
+							dialogueImage_right.transform.localScale = Vector3.zero;
+							dialogueImage_left.transform.localScale = Vector3.zero;
+							break;
+						case TalkerShow.左邊:
+							TalkerDisplays(value);
+							break;
+						case TalkerShow.右邊:
+							TalkerDisplays(value);
+							break;
+						case TalkerShow.兩人_左邊:
+							TalkerDisplays(value);
+							break;
+						case TalkerShow.兩人_右邊:
+							TalkerDisplays(value);
+							break;
+						case TalkerShow.兩人_一起:
+							dialogueImage_right.transform.localScale = Vector3.one;
+							dialogueImage_left.transform.localScale = Vector3.one;
+							break;
+					}
+
+					// if寫法
+					/*if (value == TalkerShow.兩人_左邊)
 					{
 						dialogueImage_left.transform.localScale = Vector3.one;
 						dialogueImage_right.transform.localScale = Vector3.one;
@@ -131,7 +153,7 @@ public class DialogueSystem : MonoBehaviour
 							dialogueImage_right.GetComponentsInChildren<Image>()[x].color = new Color(0.7f, 0.7f, 0.7f, 0.7f);
 						}
 					}
-					else if (_talkerShow == TalkerShow.兩人_右邊)
+					else if (value == TalkerShow.兩人_右邊)
 					{
 						dialogueImage_right.transform.localScale = Vector3.one;
 						dialogueImage_left.transform.localScale = Vector3.one;
@@ -142,7 +164,7 @@ public class DialogueSystem : MonoBehaviour
 							dialogueImage_left.GetComponentsInChildren<Image>()[x].color = new Color(0.7f, 0.7f, 0.7f, 0.7f);
 						}
 					}
-					else if (_talkerShow == TalkerShow.兩人_一起)
+					else if (value == TalkerShow.兩人_一起)
 					{
 						dialogueImage_left.transform.localScale = Vector3.one;
 						dialogueImage_right.transform.localScale = Vector3.one;
@@ -152,7 +174,7 @@ public class DialogueSystem : MonoBehaviour
 							dialogueImage_right.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 1f);
 						}
 					}
-					else if (_talkerShow == TalkerShow.左邊)
+					else if (value == TalkerShow.左邊)
 					{
 						dialogueImage_left.transform.localScale = Vector3.one;
 						dialogueImage_right.transform.localScale = Vector3.zero;
@@ -162,7 +184,7 @@ public class DialogueSystem : MonoBehaviour
 							dialogueImage_left.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 1f);
 						}
 					}
-					else if (_talkerShow == TalkerShow.右邊)
+					else if (value == TalkerShow.右邊)
 					{
 						dialogueImage_right.transform.localScale = Vector3.one;
 						dialogueImage_left.transform.localScale = Vector3.zero;
@@ -172,20 +194,56 @@ public class DialogueSystem : MonoBehaviour
 							dialogueImage_right.GetComponentsInChildren<Image>()[x].color = new Color(1f, 1f, 1f, 1f);
 						}
 					}
-					else if (_talkerShow == TalkerShow.無顯示)
+					else if (value == TalkerShow.無顯示)
 					{
 						dialogueImage_right.transform.localScale = Vector3.zero;
 						dialogueImage_left.transform.localScale = Vector3.zero;
 					}
+					*/
 				}
 			}
-
-			if (talkerShowChange != null)
-				talkerShowChange.Invoke();
 		}
 	}
-	TalkerShow _talkerShow = TalkerShow.無顯示;
-	public Action talkerShowChange = null;*/
+	[SerializeField] TalkerShow _talkerShow = TalkerShow.無顯示;
+
+	void TalkerDisplays(TalkerShow talkerShow)
+	{
+		// 顯示左右邊圖示
+		dialogueImage_left.transform.localScale = talkerShow == TalkerShow.左邊 ? Vector3.one : Vector3.zero;
+		dialogueImage_right.transform.localScale = talkerShow == TalkerShow.右邊 ? Vector3.one : Vector3.zero;
+		//dialogueImage_left.transform.localScale = talkerShow == TalkerShow.兩人_左邊 ? Vector3.one : Vector3.one;
+		//dialogueImage_right.transform.localScale = talkerShow == TalkerShow.兩人_右邊 ? Vector3.one : Vector3.one;
+
+		// 依據對話人名取得相應的角色圖示
+		for (int i = 0; i < dialogueData.Length; i++)
+		{
+			for (int j = 0; j < dialogueData[i].dialogueTotalList.Count; j++)
+			{
+				if (talkerShow == TalkerShow.左邊 || talkerShow == TalkerShow.兩人_左邊)
+				{
+					Debug.Log(dialogueData[i].dialogueTotalList[j].dialogueTalkerName);
+					dialogueImage_left = characterImagesDic[dialogueData[i].dialogueTotalList[j].dialogueTalkerName];
+					// 變更角色圖示的透明度
+					for (int x = 1; x <= 5; x++)
+					{
+						dialogueImage_left.GetComponentsInChildren<Image>()[x].color = talkerShow == TalkerShow.左邊 ? new Color(1f, 1f, 1f, 1f) : new Color(0f, 0f, 0f, 0f);
+						dialogueImage_left.GetComponentsInChildren<Image>()[x].color = talkerShow == TalkerShow.兩人_左邊 ? new Color(1f, 1f, 1f, 1f) : new Color(0.7f, 0.7f, 0.7f, 0.7f);
+					}
+				}
+				else if (talkerShow == TalkerShow.右邊 || talkerShow == TalkerShow.兩人_右邊)
+				{
+					Debug.Log(dialogueData[i].dialogueTotalList[j].dialogueTalkerName);
+					dialogueImage_right = characterImagesDic[dialogueData[i].dialogueTotalList[j].dialogueTalkerName];
+					// 變更角色圖示的透明度
+					for (int x = 1; x <= 5; x++)
+					{
+						dialogueImage_right.GetComponentsInChildren<Image>()[x].color = talkerShow == TalkerShow.右邊 ? new Color(1f, 1f, 1f, 1f) : new Color(0f, 0f, 0f, 0f);
+						dialogueImage_right.GetComponentsInChildren<Image>()[x].color = talkerShow == TalkerShow.兩人_右邊 ? new Color(1f, 1f, 1f, 1f) : new Color(0.7f, 0.7f, 0.7f, 0.7f);
+					}
+				}
+			}
+		}
+	}
 
 	/// <summary>
 	/// 顯示每段對話：並在段落之間等待玩家按下繼續按鍵
@@ -217,7 +275,56 @@ public class DialogueSystem : MonoBehaviour
 					// 更新對話者名稱
 					textTalker.text = dialogueData[i].dialogueTotalList[x].dialogueTalkerName;
 					// 更新對話者圖示顯示狀態
-					if (dialogueData[i].dialogueTotalList[x].characterPos == TalkerShow.兩人_左邊)
+					switch (dialogueData[i].dialogueTotalList[x].characterPos)
+					{
+						case TalkerShow.無顯示:
+							dialogueImage_right.transform.localScale = Vector3.zero;
+							dialogueImage_left.transform.localScale = Vector3.zero;
+							break;
+						case TalkerShow.左邊:
+							dialogueImage_left.transform.localScale = Vector3.one;
+							dialogueImage_left = characterImagesDic[dialogueData[i].dialogueTotalList[x].dialogueTalkerName];
+							for (int y = 1; y <= 5; y++)
+							{
+								dialogueImage_left.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f);
+							}
+							dialogueImage_right.transform.localScale = Vector3.zero;
+							break;
+						case TalkerShow.右邊:
+							dialogueImage_right.transform.localScale = Vector3.one;
+							dialogueImage_right = characterImagesDic[dialogueData[i].dialogueTotalList[x].dialogueTalkerName];
+							for (int y = 1; y <= 5; y++)
+							{
+								dialogueImage_right.gameObject.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f);
+							}
+							dialogueImage_left.transform.localScale = Vector3.zero;
+							break;
+						case TalkerShow.兩人_左邊:
+							dialogueImage_left.transform.localScale = Vector3.one;
+							dialogueImage_right.transform.localScale = Vector3.one;
+							dialogueImage_left = characterImagesDic[dialogueData[i].dialogueTotalList[x].dialogueTalkerName];
+							for (int y = 1; y <= 5; y++)
+							{
+								dialogueImage_left.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f);
+								dialogueImage_right.GetComponentsInChildren<Image>()[y].color = new Color(0.7f, 0.7f, 0.7f, 0.7f);
+							}
+							break;
+						case TalkerShow.兩人_右邊:
+							dialogueImage_right.transform.localScale = Vector3.one;
+							dialogueImage_left.transform.localScale = Vector3.one;
+							dialogueImage_right = characterImagesDic[dialogueData[i].dialogueTotalList[x].dialogueTalkerName];
+							for (int y = 1; y <= 5; y++)
+							{
+								dialogueImage_right.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f);
+								dialogueImage_left.GetComponentsInChildren<Image>()[y].color = new Color(0.7f, 0.7f, 0.7f, 0.7f);
+							}
+							break;
+						case TalkerShow.兩人_一起:
+							dialogueImage_right.transform.localScale = Vector3.one;
+							dialogueImage_left.transform.localScale = Vector3.one;
+							break;
+					}
+					/*if (dialogueData[i].dialogueTotalList[x].characterPos == TalkerShow.兩人_左邊)
 					{
 						Debug.Log("這是對話中_左邊");
 						dialogueImage_left.transform.localScale = Vector3.one;
@@ -280,6 +387,7 @@ public class DialogueSystem : MonoBehaviour
 						dialogueImage_left.transform.localScale = Vector3.zero;
 						dialogueImage_right.transform.localScale = Vector3.zero;
 					}
+					*/
 
 					// 第三個迴圈跑第i個對話資料中的對話總表的第x個對話數 總共有幾個對話內容_j
 					// 迴圈初始值不可為重複
