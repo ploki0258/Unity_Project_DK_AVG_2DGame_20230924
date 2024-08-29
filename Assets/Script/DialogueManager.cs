@@ -134,14 +134,17 @@ public class DialogueManager : MonoBehaviour
 		// 如果 對話框隱藏時
 		if (isHideDialogue == true)
 		{
-			// 如果 按下指定按鍵
-			if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return))
+			foreach (KeyCode btns in DialogueSystem.instance.continueBtns)
 			{
-				// 顯示對話畫布 透明度為1
-				dialogieUI.alpha = 1;
+				// 如果 按下指定按鍵
+				if (Input.GetKeyDown(btns))
+				{
+					// 顯示對話畫布 透明度為1
+					dialogieUI.alpha = 1;
 
-				// 是否隱藏對話框 = false
-				isHideDialogue = false;
+					// 是否隱藏對話框 = false
+					isHideDialogue = false;
+				}
 			}
 		}
 	}

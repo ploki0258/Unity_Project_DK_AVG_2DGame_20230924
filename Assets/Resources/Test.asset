@@ -17,8 +17,10 @@ MonoBehaviour:
     toDialogueOrOptionID: 
     dialogueType: 0
     characterPos: 0
-    dialogueTalkerName: 
-    dialogueContents: []
+    dialogueTalkerName: XXX
+    dialogueContents:
+    - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB9!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB9!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB9!!!"
+    - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB92!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB92!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB92!!!"
     effectType: 
     effectTargetName: []
     effectValue: []

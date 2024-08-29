@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8126545446569874041}
   - component: {fileID: 8126545446569874046}
   - component: {fileID: 8126545446569874047}
+  - component: {fileID: 4622657244732549573}
   m_Layer: 5
   m_Name: "\u5C0D\u8A71\u9078\u9805\u6309\u9215"
   m_TagString: Untagged
@@ -39,7 +40,7 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8126545446569874041
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -122,6 +123,23 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4622657244732549573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8126545446569874045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65ae353187516a4488f8a468865e53c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 8126545448579497733}
+  options: {fileID: 8126545446569874045}
+  option: {fileID: 8126545446569874044}
+  minWidth: 50
+  optionSpace: 10
 --- !u!1 &8126545448579497739
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,7 +238,7 @@ MonoBehaviour:
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 50
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512

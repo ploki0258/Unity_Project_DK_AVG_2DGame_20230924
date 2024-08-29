@@ -4,7 +4,6 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System;
-using Unity.VisualScripting;
 
 /// <summary>
 /// 對話系統：
@@ -35,23 +34,28 @@ public class DialogueSystem : MonoBehaviour
 	[Header("當前對話編號"), Tooltip("當前對話編號")]
 	public int currentDialogueID = 0;
 	[Header("對話間隔"), Range(0, 2)]
-	public float interval = 0.2f;
+	[SerializeField] float interval = 0.1f;
+	[Header("自動對話間隔"), Range(0, 2)]
+	[SerializeField] float intervalAuto = 0.1f;
 	[Header("文字介面：\n對話人名")]
-	public TextMeshProUGUI textTalker;
+	[SerializeField] TextMeshProUGUI textTalker;
 	[Header("對話內容")]
-	public TextMeshProUGUI textContent;
+	[SerializeField] TextMeshProUGUI textContent;
 	[Header("對話繼續圖示")]
-	public GameObject continueIcon = null;
+	[SerializeField] GameObject continueIcon = null;
 	[Header("對話人物圖示_左")]
-	public Image dialogueImage_left;
+	[SerializeField] Image dialogueImage_left;
 	[Header("對話人物圖示_右")]
-	public Image dialogueImage_right;
+	[SerializeField] Image dialogueImage_right;
 	[Header("對話選項按鈕")]
-	public GameObject optionButton = null;
+	[SerializeField] GameObject optionButton = null;
 	[Header("對話選項座標")]
-	public RectTransform dialoguePos = null;
+	[SerializeField] RectTransform dialoguePos = null;
 	[Header("消失漸變倍數")]
-	public float vanishMultiple = 1f;
+	[SerializeField] float vanishMultiple = 1f;
+	[Header("繼續按鍵")]
+	public KeyCode[] continueBtns = { 0 };
+	[SerializeField] Animator ani;
 
 	[Header("角色名稱陣列")]
 	public string[] characteName;
@@ -60,14 +64,19 @@ public class DialogueSystem : MonoBehaviour
 
 	[Tooltip("是否取消打字")]
 	private bool cancelTyping = false;
-	[Tooltip("是否在進行對話")]
+	[Tooltip("是否可以取消打字")]
+	private bool canCancel = false;
+	[Tooltip("是否在對話中")]
 	private bool isTalking = false;
+	[Tooltip("對話是否在繼續")]
+	private bool isContinueing = false;
+	[Tooltip("是否停止")]
+	private bool isStop = false;
 	#endregion
 
 	private void Awake()
 	{
 		instance = this;    // 讓單例等於自己
-							//talkUI.alpha = 0f;  // 一開始隱藏對話框 α值為0
 		dialogueDataArrary = Resources.LoadAll<DialogueData>("");
 		// 指定字典的對應值
 		for (int i = 0; i < characteName.Length; i++)
@@ -92,7 +101,7 @@ public class DialogueSystem : MonoBehaviour
 		//Debug.Log($"<color=Green>當前ID：{currentDialogueID}</color>");
 
 		vanishDialogueUI(vanishMultiple);
-		quickShowDialogue();
+		ContinueDialogue();
 	}
 
 	/// <summary>
@@ -253,7 +262,8 @@ public class DialogueSystem : MonoBehaviour
 	{
 		isTalking = true;
 		// 顯示對話畫布 透明度為1
-		DialogueManager.instance.dialogieUI.alpha = 1;
+		float alpha = DialogueManager.instance.dialogieUI.alpha;
+		DialogueManager.instance.dialogieUI.alpha = Mathf.Lerp(0f, 1f, Time.unscaledDeltaTime * 100f);
 		// 清空對話內容
 		textContent.text = "";
 
@@ -393,6 +403,9 @@ public class DialogueSystem : MonoBehaviour
 					// 迴圈初始值不可為重複
 					for (int j = 0; j < dialogueData[i].dialogueTotalList[x].dialogueContents.Length; j++)
 					{
+						canCancel = true;
+						cancelTyping = false;
+
 						// 第四個迴圈跑第i個對話資料中的對話總表的第x個對話數的第j個對話內容中 總共有幾個字_k
 						// 逐字顯示
 						for (int k = 0; k < dialogueData[i].dialogueTotalList[x].dialogueContents[j].Length; k++)
@@ -400,37 +413,39 @@ public class DialogueSystem : MonoBehaviour
 							//Debug.Log(dialogueData[i].dialogueTotalList[x].dialogueContents[j][k]); // 顯示字
 							// 更新對話內容
 							textContent.text += dialogueData[i].dialogueTotalList[x].dialogueContents[j][k];
-							// 打字間隔
-							yield return new WaitForSeconds(interval);
-
-							//if (cancelTyping)
-							//{
-							//	textContent.text = dialogueData[i].dialogueTotalList[x].dialogueContents[j];
-							//}
+							// 如果取消打字為false 就間隔一段時間才打字 
+							if (!cancelTyping)
+							{
+								yield return new WaitForSeconds(interval);
+							}
 						}
 
 						// 每段對話完成後顯示繼續圖示
 						continueIcon.SetActive(true);
 
-						// 如果 沒有隱藏對話框的話
+						// 如果 沒有隱藏對話框的話 才進行顯示對話內容
 						if (DialogueManager.instance.isHideDialogue == false)
 						{
 							// 如果 正在進行自動播放的話
 							if (DialogueManager.instance.isAutoplay == true)
 							{
-								yield return new WaitForSeconds(1f);
+								yield return new WaitForSeconds(intervalAuto);
 							}
 
+							isStop = true;
+							canCancel = false;
 							// 等待玩家按下指定的按鍵 來繼續下段對話
-							// 沒按下指定的按鍵 且 正在對話中 且 沒有自動播放時 等待玩家繼續
-							while (!(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0))
-								&& isTalking == true && DialogueManager.instance.isAutoplay == false)
+							// 沒按下指定的按鍵 且 正在對話中 且 沒有自動播放時 等待玩家按下繼續鍵
+							while (!isContinueing && isTalking && !DialogueManager.instance.isAutoplay)
 							{
 								// null 為每一幀的時間
 								yield return null;
 							}
+							isStop = false;
+							isContinueing = false;
 						}
-						else if (DialogueManager.instance.isHideDialogue == true)
+						// 否則就隱藏
+						else
 						{
 							Debug.Log("對話框隱藏中，停止顯示對話");
 							yield break;
@@ -442,13 +457,6 @@ public class DialogueSystem : MonoBehaviour
 						continueIcon.SetActive(false);
 					}
 
-					// 玩家按下繼續按鈕後 如果對話內容為空 則對話者名稱為空
-					//if (textContent.text == "")
-					//	textTalker.text = "";
-					// 隱藏角色圖示
-					//dialogueImage_left.transform.localScale = Vector3.zero;
-					//dialogueImage_right.transform.localScale = Vector3.zero;
-
 					// 第五個迴圈跑第i個對話資料中的對話總表的第x個對話數 總共有幾個要跳轉至的對話或選項ID_j
 					for (int j = 0; j < dialogueData[i].dialogueTotalList[x].toDialogueOrOptionID.Length; j++)
 					{
@@ -457,31 +465,44 @@ public class DialogueSystem : MonoBehaviour
 						Debug.Log("當前ID：" + currentDialogueID);
 					}
 				}
-				// 否則如果第i個對話資料.第x個對話數.對話類別為"選項" 且 當前ID 等於 第i個對話資料.第x個對話數.對話編號 的話 才執行
-				else if (dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.選項 && currentDialogueID ==
+
+				// 如果第i個對話資料.第x個對話數.對話類別為"選項" 且 當前ID 等於 第i個對話資料.第x個對話數.對話編號 的話 才執行
+				if (dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.選項 && currentDialogueID ==
 						 dialogueData[i].dialogueTotalList[x].dialogueID)
 				{
-					Debug.Log("<color=orange>這是「選項」</color>");
+					//Debug.Log("<color=orange>這是「選項」</color>");
 					// 隱藏繼續圖示
 					continueIcon.SetActive(false);
 					// 顯示對話選項按鈕
 					optionButton.SetActive(true);
 					DialogueManager.instance.optionUI.alpha = 1f;
 
+					ani.SetTrigger("openOption");
+					// 刪除前次生成的選項
 					foreach (GameObject t in garbageCan)
 					{
 						Destroy(t.gameObject);
 					}
 					garbageCan.Clear();
 
+					// 第i個對話資料.第x個對話數.對話/選項內容的個數
 					for (int j = 0; j < dialogueData[i].dialogueTotalList[x].dialogueContents.Length; j++)
 					{
+						// 欲跳轉的編號個數需與選項內容的個數一致
+						if (dialogueData[i].dialogueTotalList[x].dialogueContents.Length != dialogueData[i].dialogueTotalList[x].toDialogueOrOptionID.Length)
+						{
+							Debug.Log("欲跳轉的編號個數需與選項內容的個數一致");
+							break;
+						}
+						// 指定欲跳轉的選項編號
 						int tempID = dialogueData[i].dialogueTotalList[x].toDialogueOrOptionID[j];
+						// 生成對話選項
 						GameObject tempOption = Instantiate(optionButton, dialoguePos);
+						// 更新選項內容
 						tempOption.GetComponentInChildren<TextMeshProUGUI>().text =
 							dialogueData[i].dialogueTotalList[x].dialogueContents[j].ToString();
 
-						Debug.Log($"<color=yellow>{dialogueData[i].dialogueTotalList[x].toDialogueOrOptionID[j]}</color>");
+						Debug.Log($"<color=orange>欲跳轉的對話/選項編號：{dialogueData[i].dialogueTotalList[x].toDialogueOrOptionID[j]}</color>");
 						tempOption.GetComponent<Button>().onClick.AddListener
 							(
 								delegate
@@ -490,13 +511,38 @@ public class DialogueSystem : MonoBehaviour
 								}
 							);
 						garbageCan.Add(tempOption);
-						Debug.Log($"<color=yellow>當前ID：{currentDialogueID}</color>");
 					}
+					Debug.Log($"<color=orange>當前ID：{currentDialogueID}</color>");
 				}
 			}
 		}
 
 		isTalking = false;
+	}
+
+	/// <summary>
+	/// 繼續對話功能
+	/// </summary>
+	void ContinueDialogue()
+	{
+		foreach (KeyCode btns in continueBtns)
+		{
+			// 如果按下繼續鍵的話
+			if (Input.GetKeyDown(btns))
+			{
+				// 如果是否繼續為false 且 正在對話中
+				// 是否繼續變為true
+				if (!isContinueing && isTalking && isStop)
+				{
+					isContinueing = true;
+				}
+				// 還在進行對話中
+				else if (canCancel == true && cancelTyping == false)
+				{
+					cancelTyping = true;
+				}
+			}
+		}
 	}
 
 	/// <summary>
@@ -542,17 +588,6 @@ public class DialogueSystem : MonoBehaviour
 					}
 				}
 			}
-		}
-	}
-
-	/// <summary>
-	/// 對話內容快速顯示
-	/// </summary>
-	void quickShowDialogue()
-	{
-		if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0))
-		{
-			cancelTyping = !cancelTyping;
 		}
 	}
 }
