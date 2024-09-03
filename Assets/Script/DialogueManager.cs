@@ -26,9 +26,9 @@ public class DialogueManager : MonoBehaviour
 	private GameObject autoplayButton = null;
 	[SerializeField, Header("自動播放按鈕顏色")]
 	private Color changeColor;
-	[SerializeField, Header("之前對話人名底圖")]
+	[SerializeField, Header("之前對話人名底圖"), Tooltip("之前對話人名底圖")]
 	Image basemapTextTalkerBefore = null;
-	[SerializeField, Header("之前對話內容底圖")]
+	[SerializeField, Header("之前對話內容底圖"), Tooltip("之前對話內容底圖")]
 	Image basemapTextContentBefore = null;
 	[SerializeField, Header("之前對話人名")]
 	TextMeshProUGUI textTalkerBefore = null;
@@ -179,13 +179,18 @@ public class DialogueManager : MonoBehaviour
 	/// <summary>
 	/// 回想之前對話內容
 	/// </summary>
-	public void dialogueLogContent()
+	public void DialogueLogContent()
 	{
 		ShowDialogueLogUI();
 		textTalkerBefore.text = DialogueSystem.instance.dialogueData[0].dialogueTotalList[0].dialogueTalkerName;
-		//textContentBefore.text = DialogueSystem.instance.dialogueData[0].dialogueTotalList[0].dialogueContents[0].ToString();
-		basemapTextTalkerBefore.color = characterBasemapDic[DialogueSystem.instance.dialogueData[0].dialogueTotalList[0].dialogueTalkerName];
-		basemapTextContentBefore.color = characterBasemapDic[DialogueSystem.instance.dialogueData[0].dialogueTotalList[0].dialogueTalkerName];
+		textContentBefore.text = DialogueSystem.instance.dialogueData[0].dialogueTotalList[0].dialogueContents[0];
+		//basemapTextTalkerBefore.color = characterBasemapDic[DialogueSystem.instance.dialogueData[0].dialogueTotalList[0].dialogueTalkerName];
+		//basemapTextContentBefore.color = characterBasemapDic[DialogueSystem.instance.dialogueData[0].dialogueTotalList[0].dialogueTalkerName];
+	}
+
+	public void StopDislogue()
+	{
+		DialogueSystem.instance.enabled = false;
 	}
 
 	public void CloseButton()
@@ -195,6 +200,4 @@ public class DialogueManager : MonoBehaviour
 		dialogieLogUI_CG.alpha = 0f;
 		DialogueSystem.instance.enabled = true;
 	}
-
-
 }
