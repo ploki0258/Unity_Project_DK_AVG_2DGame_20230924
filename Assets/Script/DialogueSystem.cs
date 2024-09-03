@@ -22,7 +22,7 @@ public class DialogueSystem : MonoBehaviour
 	public static DialogueSystem instance = null;
 
 	[Tooltip("對話資料陣列")]
-	public DialogueData[] dialogueDataArrary = new DialogueData[0];
+	[SerializeField] DialogueData[] dialogueDataArrary = new DialogueData[0];
 	[Tooltip("垃圾桶")]
 	private List<GameObject> garbageCan = new List<GameObject>();
 	[Tooltip("角色名稱對應角色圖示字典")]
@@ -72,12 +72,17 @@ public class DialogueSystem : MonoBehaviour
 	private bool isContinueing = false;
 	[Tooltip("是否停止")]
 	private bool isStop = false;
+	[Tooltip("一次性對話")]
+	private bool isDisposableDialogue = false;
+	[Tooltip("一次性選項")]
+	private bool isDisposableOptions = false;
+
 	#endregion
 
 	private void Awake()
 	{
 		instance = this;    // 讓單例等於自己
-		dialogueDataArrary = Resources.LoadAll<DialogueData>("");
+		dialogueDataArrary = Resources.LoadAll<DialogueData>("MainData/");
 		// 指定字典的對應值
 		for (int i = 0; i < characteName.Length; i++)
 		{
@@ -98,8 +103,6 @@ public class DialogueSystem : MonoBehaviour
 
 	private void Update()
 	{
-		//Debug.Log($"<color=Green>當前ID：{currentDialogueID}</color>");
-
 		vanishDialogueUI(vanishMultiple);
 		ContinueDialogue();
 	}
@@ -213,7 +216,7 @@ public class DialogueSystem : MonoBehaviour
 			}
 		}
 	}
-	[SerializeField] TalkerShow _talkerShow = TalkerShow.無顯示;
+	TalkerShow _talkerShow = TalkerShow.無顯示;
 
 	void TalkerDisplays(TalkerShow talkerShow)
 	{
@@ -262,11 +265,10 @@ public class DialogueSystem : MonoBehaviour
 	{
 		isTalking = true;
 		// 顯示對話畫布 透明度為1
-		float alpha = DialogueManager.instance.dialogieUI.alpha;
-		DialogueManager.instance.dialogieUI.alpha = Mathf.Lerp(0f, 1f, Time.unscaledDeltaTime * 100f);
+		DisplayDialogueUI();
 		// 清空對話內容
 		textContent.text = "";
-
+		dialogueData = dialogueDataArrary;
 		// 第一個迴圈跑 總共有幾個對話資料_i
 		for (int i = 0; i < dialogueData.Length; i++)
 		{
@@ -274,8 +276,9 @@ public class DialogueSystem : MonoBehaviour
 			for (int x = 0; x < dialogueData[i].dialogueTotalList.Count; x++)
 			{
 				// 如果第i個對話資料.第x個對話數.對話類別為"對話" 且 當前ID 等於 第i個對話資料.第x個對話數.對話編號 的話 才執行
-				if (dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.對話 && currentDialogueID ==
-					dialogueData[i].dialogueTotalList[x].dialogueID)
+				if ((dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.對話 ||
+					 dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.重要對話) &&
+					 currentDialogueID == dialogueData[i].dialogueTotalList[x].dialogueID)
 				{
 					// 隱藏繼續圖示
 					continueIcon.SetActive(false);
@@ -334,6 +337,7 @@ public class DialogueSystem : MonoBehaviour
 							dialogueImage_left.transform.localScale = Vector3.one;
 							break;
 					}
+					#region if
 					/*if (dialogueData[i].dialogueTotalList[x].characterPos == TalkerShow.兩人_左邊)
 					{
 						Debug.Log("這是對話中_左邊");
@@ -398,7 +402,8 @@ public class DialogueSystem : MonoBehaviour
 						dialogueImage_right.transform.localScale = Vector3.zero;
 					}
 					*/
-
+					#endregion
+					Debug.Log("當前ID：" + currentDialogueID);
 					// 第三個迴圈跑第i個對話資料中的對話總表的第x個對話數 總共有幾個對話內容_j
 					// 迴圈初始值不可為重複
 					for (int j = 0; j < dialogueData[i].dialogueTotalList[x].dialogueContents.Length; j++)
@@ -467,8 +472,9 @@ public class DialogueSystem : MonoBehaviour
 				}
 
 				// 如果第i個對話資料.第x個對話數.對話類別為"選項" 且 當前ID 等於 第i個對話資料.第x個對話數.對話編號 的話 才執行
-				if (dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.選項 && currentDialogueID ==
-						 dialogueData[i].dialogueTotalList[x].dialogueID)
+				if ((dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.選項 ||
+					 dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.重要選項) &&
+					 currentDialogueID == dialogueData[i].dialogueTotalList[x].dialogueID)
 				{
 					//Debug.Log("<color=orange>這是「選項」</color>");
 					// 隱藏繼續圖示
@@ -479,9 +485,9 @@ public class DialogueSystem : MonoBehaviour
 
 					ani.SetTrigger("openOption");
 					// 刪除前次生成的選項
-					foreach (GameObject t in garbageCan)
+					foreach (GameObject option in garbageCan)
 					{
-						Destroy(t.gameObject);
+						Destroy(option.gameObject);
 					}
 					garbageCan.Clear();
 
@@ -513,6 +519,21 @@ public class DialogueSystem : MonoBehaviour
 						garbageCan.Add(tempOption);
 					}
 					Debug.Log($"<color=orange>當前ID：{currentDialogueID}</color>");
+				}
+				// 重要對話/選項 僅出現一次
+				if (dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.重要對話 ||
+					dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.重要選項)
+				{
+					if (dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.重要選項)
+					{
+						Debug.Log("這是「重要」<b>選項</b>");
+						isDisposableOptions = true;
+					}
+					else if (dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.重要對話)
+					{
+						Debug.Log("這是「重要」<b>對話</b>");
+						isDisposableDialogue = true;
+					}
 				}
 			}
 		}
@@ -546,6 +567,16 @@ public class DialogueSystem : MonoBehaviour
 	}
 
 	/// <summary>
+	/// 顯示對話框UI
+	/// </summary>
+	void DisplayDialogueUI()
+	{
+		float alpha = DialogueManager.instance.dialogieUI.alpha;
+		alpha = Mathf.Lerp(0f, 1f, Time.unscaledDeltaTime * 100f);
+		DialogueManager.instance.dialogieUI.alpha = alpha;
+	}
+
+	/// <summary>
 	/// 對話UI與角色逐漸消失
 	/// </summary>
 	/// <param name="_vanishMultiple">消失倍數</param>
@@ -553,7 +584,6 @@ public class DialogueSystem : MonoBehaviour
 	{
 		optionButton.SetActive(false);
 
-		_vanishMultiple = vanishMultiple;
 		for (int i = 0; i < dialogueData.Length; i++)
 		{
 			for (int x = 0; x < dialogueData[i].dialogueTotalList.Count; x++)
@@ -570,9 +600,9 @@ public class DialogueSystem : MonoBehaviour
 					if (textContent.text == "")
 						textTalker.text = "";
 
+					// 角色圖示慢慢消失
 					for (int y = 1; y <= 5; y++)
 					{
-						// 讓角色圖示慢慢消失
 						dialogueImage_left.GetComponentsInChildren<Image>()[y].color -= new Color(0f, 0f, 0f, _vanishMultiple * Time.unscaledDeltaTime);
 						dialogueImage_right.GetComponentsInChildren<Image>()[y].color -= new Color(0f, 0f, 0f, _vanishMultiple * Time.unscaledDeltaTime);
 					}

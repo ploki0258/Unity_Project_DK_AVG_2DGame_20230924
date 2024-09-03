@@ -15,7 +15,7 @@ MonoBehaviour:
   dialogueTotalList:
   - dialogueID: -1
     toDialogueOrOptionID: 
-    dialogueType: 3
+    dialogueType: 4
     characterPos: 5
     dialogueTalkerName: 
     dialogueContents:

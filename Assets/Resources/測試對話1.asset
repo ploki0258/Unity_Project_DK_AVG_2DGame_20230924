@@ -28,11 +28,11 @@ MonoBehaviour:
     - 0
   - dialogueID: 2
     toDialogueOrOptionID: 03000000
-    dialogueType: 0
+    dialogueType: 2
     characterPos: 3
     dialogueTalkerName: "\u5C0F\u611B"
     dialogueContents:
-    - '!'
+    - '!!'
     - "\u59B3\u662F\u8AB0?\n\u59B3\u77E5\u9053\u9019\u88E1\u662F\u4EC0\u9EBC\u5730\u65B9\u55CE?"
     effectType: 
     effectTargetName: []

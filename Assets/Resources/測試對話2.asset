@@ -21,20 +21,20 @@ MonoBehaviour:
     dialogueContents:
     - "\u75FE...\u6211\u662F\u5C0F\u5149\uFF0C\u6211\u4E5F\u4E0D\u66C9\u5F97\u9019\u88E1\u662F\u54EA\u88E1\u3002"
     - "(\u8A72\u600E\u9EBC\u8FA6\u5462?)"
-    effectType: 0
-    effectTargetName: 
-    favorability: 0
-    strength: 0
+    effectType: 
+    effectTargetName: []
+    effectValue:
+    - 0
   - dialogueID: 4
     toDialogueOrOptionID: 050000000600000007000000
-    dialogueType: 1
+    dialogueType: 3
     characterPos: 4
     dialogueTalkerName: "\u5C0F\u5149"
     dialogueContents:
     - "\u54EA\u500B...\u8981\u4E00\u8D77\u8D70\u55CE?"
     - "\u59B3\u662F\u600E\u9EBC\u51FA\u73FE\u5728\u9019\u88E1\u7684\u5462?"
     - ......
-    effectType: 0
-    effectTargetName: 
-    favorability: 0
-    strength: 0
+    effectType: 
+    effectTargetName: []
+    effectValue:
+    - 0

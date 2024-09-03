@@ -17,7 +17,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Create_New_DialogueData", fileName = "New_DialogueData")]
 public class DialogueData : ScriptableObject
 {
-	[Header("對話總表")]
+	[Header("對話總表"), Tooltip("對話資料")]
 	public List<dialogue> dialogueTotalList = new List<dialogue>();
 }
 
@@ -57,7 +57,7 @@ public enum TalkerShow
 
 public enum DialogueType
 {
-	對話, 選項, 重要, 結束
+	對話, 選項, 重要對話, 重要選項, 結束
 }
 
 public enum EffectType
