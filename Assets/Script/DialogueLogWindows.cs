@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogueLogWindows : Windows<DialogueLogWindows>
+public class DialogueLogWindows : MonoBehaviour
 {
 	[SerializeField, Header("對話模板")]
 	GameObject tempLog = null;
@@ -10,25 +10,9 @@ public class DialogueLogWindows : Windows<DialogueLogWindows>
 
 	float timeScaleLog = 0f;
 
-	protected override void Start()
+	private void Start()
 	{
-		base.Start();
-
 		刷新對話紀錄();
-	}
-
-	public override void Open()
-	{
-		base.Open();
-
-		timeScaleLog = 0f;
-	}
-
-	public override void Close()
-	{
-		base.Close();
-
-		timeScaleLog = 1f;
 	}
 
 	// 建立"垃圾桶"列表 用於暫存要清除的格子

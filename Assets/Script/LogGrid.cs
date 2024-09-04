@@ -13,7 +13,7 @@ public class LogGrid : MonoBehaviour
 	[SerializeField, Header("之前對話人名")]
 	TextMeshProUGUI textTalkerBefore = null;
 
-	Dialogue dataLog;
+	DialogueData dataLog;
 
 	public void InputDialogueData(int id)
 	{
@@ -21,12 +21,27 @@ public class LogGrid : MonoBehaviour
 
 		for (int i = 0; i < DialogueSystem.instance.dialogueData.Length; i++)
 		{
-			textTalkerBefore.text = dataLog.dialogueContents[i];
-			textContentBefore.text = dataLog.talkerName;
-			if (DialogueManager.instance.characterBasemapDic[dataLog.talkerName] != null)
+			for (int j = 0; j < DialogueSystem.instance.dialogueData[i].dialogueTotalList.Count; j++)
 			{
-				talkerBG.color = DialogueManager.instance.characterBasemapDic[dataLog.talkerName];
-				contentBG.color = DialogueManager.instance.characterBasemapDic[dataLog.talkerName];
+				textTalkerBefore.text = dataLog.dialogueTotalList[j].talkerName;
+				for (int x = 0; x < DialogueSystem.instance.dialogueData[i].dialogueTotalList[j].dialogueContents.Length; x++)
+				{
+					textContentBefore.text = dataLog.dialogueTotalList[j].dialogueContents[x];
+				}
+
+				foreach (string name in DialogueManager.instance.characteName)
+				{
+					if (DialogueManager.instance.characterBasemapDic.ContainsKey(name))
+					{
+						Debug.Log(name);
+						//talkerBG.color = DialogueManager.instance.characterBasemapDic[dataLog.talkerName];
+						//contentBG.color = DialogueManager.instance.characterBasemapDic[dataLog.talkerName];
+					}
+					else
+					{
+						Debug.Log("找不到人名");
+					}
+				}
 			}
 		}
 	}

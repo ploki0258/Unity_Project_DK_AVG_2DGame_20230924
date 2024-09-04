@@ -44,7 +44,7 @@ public class DialogueManager : MonoBehaviour
 	[SerializeField, Header("之前對話紀錄")]
 	GameObject dialogueBeforePrefab = null;
 	[Header("角色名稱陣列")]
-	public string[] characteName;
+	public string[] characteName = new string[0];
 	[Header("角色圖示列表")]
 	public List<Image> characterImages = new List<Image>();
 	[Header("底圖顏色列表")]
@@ -108,7 +108,7 @@ public class DialogueManager : MonoBehaviour
 	/// </summary>
 	/// <param name="id">對話(選項)ID</param>
 	/// <returns>對話 Dialogue</returns>
-	public Dialogue FindDialogueById(int id)
+	public DialogueData FindDialogueById(int id)
 	{
 		for (int i = 0; i < dialogueDataList.Count; i++)
 		{
@@ -116,12 +116,12 @@ public class DialogueManager : MonoBehaviour
 			{
 				if (dialogueDataList[i].dialogueTotalList[j].dialogueID == id)
 				{
-					return dialogueDataList[i].dialogueTotalList[j];
+					return dialogueDataList[i];
 				}
 			}
 		}
 		Debug.Log("查無此ID：" + id);
-		return new Dialogue();
+		return new DialogueData();
 	}
 
 	public bool 已經對話過了(int id, out Dialogue dialogue)
@@ -241,7 +241,7 @@ public class DialogueManager : MonoBehaviour
 	}
 
 	/// <summary>
-	/// 回想之前對話內容
+	/// 對話紀錄內容
 	/// </summary>
 	public void DialogueLogContent()
 	{
