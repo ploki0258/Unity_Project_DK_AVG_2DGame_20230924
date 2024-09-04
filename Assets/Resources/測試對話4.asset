@@ -17,10 +17,10 @@ MonoBehaviour:
     toDialogueOrOptionID: ffffffff
     dialogueType: 0
     characterPos: 3
-    dialogueTalkerName: "\u5C0F\u611B"
+    talkerName: "\u5C0F\u611B"
     dialogueContents:
     - "\u75FE...\u6211\u4E0D\u8A18\u5F97\u4E86\uFF0C\u59B3\u4E5F\u662F\u55CE?"
-    effectType: 0
-    effectTargetName: 
-    favorability: 0
-    strength: 0
+    effectType: 
+    effectTargetName: []
+    effectValue:
+    - 0

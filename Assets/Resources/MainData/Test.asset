@@ -17,7 +17,7 @@ MonoBehaviour:
     toDialogueOrOptionID: 0a000000
     dialogueType: 2
     characterPos: 0
-    dialogueTalkerName: _______
+    talkerName: _____
     dialogueContents:
     - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB9!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB9!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB9!!!"
     - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB92!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB92!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB92!!!"
@@ -28,7 +28,7 @@ MonoBehaviour:
     toDialogueOrOptionID: 14000000
     dialogueType: 0
     characterPos: 0
-    dialogueTalkerName: _______
+    talkerName: 
     dialogueContents:
     - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB93!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB93!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB93!!!"
     - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB94!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB94!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB94!!!"
@@ -39,7 +39,7 @@ MonoBehaviour:
     toDialogueOrOptionID: ffffffff
     dialogueType: 0
     characterPos: 0
-    dialogueTalkerName: _______
+    talkerName: 
     dialogueContents:
     - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB95!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB95!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB95!!!"
     - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB96!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB96!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB96!!!"
@@ -50,7 +50,7 @@ MonoBehaviour:
     toDialogueOrOptionID: 
     dialogueType: 4
     characterPos: 0
-    dialogueTalkerName: _______
+    talkerName: 
     dialogueContents: []
     effectType: 
     effectTargetName: []

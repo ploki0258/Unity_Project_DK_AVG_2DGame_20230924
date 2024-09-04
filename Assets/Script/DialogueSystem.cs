@@ -21,12 +21,10 @@ public class DialogueSystem : MonoBehaviour
 	// 將 DialogSystem 設定為單例模式
 	public static DialogueSystem instance = null;
 
-	[Tooltip("對話資料陣列")]
-	[SerializeField] DialogueData[] dialogueDataArrary = new DialogueData[0];
 	[Tooltip("垃圾桶")]
 	private List<GameObject> garbageCan = new List<GameObject>();
-	[Tooltip("角色名稱對應角色圖示字典")]
-	public Dictionary<string, Image> characterImagesDic = new Dictionary<string, Image>();
+	[Tooltip("對話過的資料列表")]
+	public List<Dialogue> 對話過的列表 = new List<Dialogue>();
 
 	#region 欄位
 	[Header("對話資料")]
@@ -57,11 +55,6 @@ public class DialogueSystem : MonoBehaviour
 	public KeyCode[] continueBtns = { 0 };
 	[SerializeField] Animator ani;
 
-	[Header("角色名稱陣列")]
-	public string[] characteName;
-	[Header("角色圖示列表")]
-	public List<Image> characterImages = new List<Image>();
-
 	[Tooltip("是否取消打字")]
 	private bool cancelTyping = false;
 	[Tooltip("是否可以取消打字")]
@@ -76,18 +69,13 @@ public class DialogueSystem : MonoBehaviour
 	private bool isDisposableDialogue = false;
 	[Tooltip("一次性選項")]
 	private bool isDisposableOptions = false;
+	bool 對話過了;
 
 	#endregion
 
 	private void Awake()
 	{
 		instance = this;    // 讓單例等於自己
-		dialogueDataArrary = Resources.LoadAll<DialogueData>("MainData/");
-		// 指定字典的對應值
-		for (int i = 0; i < characteName.Length; i++)
-		{
-			characterImagesDic[characteName[i]] = characterImages[i];
-		}
 	}
 
 	private void Start()
@@ -233,8 +221,8 @@ public class DialogueSystem : MonoBehaviour
 			{
 				if (talkerShow == TalkerShow.左邊 || talkerShow == TalkerShow.兩人_左邊)
 				{
-					Debug.Log(dialogueData[i].dialogueTotalList[j].dialogueTalkerName);
-					dialogueImage_left = characterImagesDic[dialogueData[i].dialogueTotalList[j].dialogueTalkerName];
+					Debug.Log(dialogueData[i].dialogueTotalList[j].talkerName);
+					dialogueImage_left = DialogueManager.instance.characterImagesDic[dialogueData[i].dialogueTotalList[j].talkerName];
 					// 變更角色圖示的透明度
 					for (int x = 1; x <= 5; x++)
 					{
@@ -244,8 +232,8 @@ public class DialogueSystem : MonoBehaviour
 				}
 				else if (talkerShow == TalkerShow.右邊 || talkerShow == TalkerShow.兩人_右邊)
 				{
-					Debug.Log(dialogueData[i].dialogueTotalList[j].dialogueTalkerName);
-					dialogueImage_right = characterImagesDic[dialogueData[i].dialogueTotalList[j].dialogueTalkerName];
+					Debug.Log(dialogueData[i].dialogueTotalList[j].talkerName);
+					dialogueImage_right = DialogueManager.instance.characterImagesDic[dialogueData[i].dialogueTotalList[j].talkerName];
 					// 變更角色圖示的透明度
 					for (int x = 1; x <= 5; x++)
 					{
@@ -268,7 +256,7 @@ public class DialogueSystem : MonoBehaviour
 		DisplayDialogueUI();
 		// 清空對話內容
 		textContent.text = "";
-		dialogueData = dialogueDataArrary;
+		dialogueData = DialogueManager.instance.dialogueDataList.ToArray();
 		// 第一個迴圈跑 總共有幾個對話資料_i
 		for (int i = 0; i < dialogueData.Length; i++)
 		{
@@ -286,7 +274,7 @@ public class DialogueSystem : MonoBehaviour
 					optionButton.SetActive(false);
 					DialogueManager.instance.optionUI.alpha = 0f;
 					// 更新對話者名稱
-					textTalker.text = dialogueData[i].dialogueTotalList[x].dialogueTalkerName;
+					textTalker.text = dialogueData[i].dialogueTotalList[x].talkerName;
 					// 更新對話者圖示顯示狀態
 					switch (dialogueData[i].dialogueTotalList[x].characterPos)
 					{
@@ -296,7 +284,7 @@ public class DialogueSystem : MonoBehaviour
 							break;
 						case TalkerShow.左邊:
 							dialogueImage_left.transform.localScale = Vector3.one;
-							dialogueImage_left = characterImagesDic[dialogueData[i].dialogueTotalList[x].dialogueTalkerName];
+							dialogueImage_left = DialogueManager.instance.characterImagesDic[dialogueData[i].dialogueTotalList[x].talkerName];
 							for (int y = 1; y <= 5; y++)
 							{
 								dialogueImage_left.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f);
@@ -305,7 +293,7 @@ public class DialogueSystem : MonoBehaviour
 							break;
 						case TalkerShow.右邊:
 							dialogueImage_right.transform.localScale = Vector3.one;
-							dialogueImage_right = characterImagesDic[dialogueData[i].dialogueTotalList[x].dialogueTalkerName];
+							dialogueImage_right = DialogueManager.instance.characterImagesDic[dialogueData[i].dialogueTotalList[x].talkerName];
 							for (int y = 1; y <= 5; y++)
 							{
 								dialogueImage_right.gameObject.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f);
@@ -315,7 +303,7 @@ public class DialogueSystem : MonoBehaviour
 						case TalkerShow.兩人_左邊:
 							dialogueImage_left.transform.localScale = Vector3.one;
 							dialogueImage_right.transform.localScale = Vector3.one;
-							dialogueImage_left = characterImagesDic[dialogueData[i].dialogueTotalList[x].dialogueTalkerName];
+							dialogueImage_left = DialogueManager.instance.characterImagesDic[dialogueData[i].dialogueTotalList[x].talkerName];
 							for (int y = 1; y <= 5; y++)
 							{
 								dialogueImage_left.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f);
@@ -325,7 +313,7 @@ public class DialogueSystem : MonoBehaviour
 						case TalkerShow.兩人_右邊:
 							dialogueImage_right.transform.localScale = Vector3.one;
 							dialogueImage_left.transform.localScale = Vector3.one;
-							dialogueImage_right = characterImagesDic[dialogueData[i].dialogueTotalList[x].dialogueTalkerName];
+							dialogueImage_right = DialogueManager.instance.characterImagesDic[dialogueData[i].dialogueTotalList[x].talkerName];
 							for (int y = 1; y <= 5; y++)
 							{
 								dialogueImage_right.GetComponentsInChildren<Image>()[y].color = new Color(1f, 1f, 1f, 1f);
@@ -424,7 +412,7 @@ public class DialogueSystem : MonoBehaviour
 								yield return new WaitForSeconds(interval);
 							}
 						}
-
+						對話過了 = DialogueManager.instance.已經對話過了(dialogueData[i].dialogueTotalList[x].dialogueID, out Dialogue dialogue);
 						// 每段對話完成後顯示繼續圖示
 						continueIcon.SetActive(true);
 

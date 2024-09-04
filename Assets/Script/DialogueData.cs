@@ -18,11 +18,11 @@ using UnityEngine;
 public class DialogueData : ScriptableObject
 {
 	[Header("對話總表"), Tooltip("對話資料")]
-	public List<dialogue> dialogueTotalList = new List<dialogue>();
+	public List<Dialogue> dialogueTotalList = new List<Dialogue>();
 }
 
 [System.Serializable]
-public class dialogue
+public class Dialogue
 {
 	[Header("對話內容欄位\n\n對話編號"), Tooltip("對話或選項的ID")]
 	public int dialogueID;
@@ -35,7 +35,7 @@ public class dialogue
 	[Header("角色位置"), Tooltip("角色位置顯示的狀態")]
 	public TalkerShow characterPos = TalkerShow.無顯示;
 	[Header("對話者名稱")]
-	public string dialogueTalkerName = "";
+	public string talkerName = "";
 	[Header("對話/選項內容陣列"), TextArea(3, 5)]
 	public string[] dialogueContents = new string[0];
 	//[Header("選項內容"), TextArea(2, 5)]

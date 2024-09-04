@@ -3673,7 +3673,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1615279682}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99999374
+  m_Size: 0.9999848
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4292,7 +4292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20bf529781d8e8e40b7410ffdd51da80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueDataArrary: []
+  "\u5C0D\u8A71\u904E\u7684\u5217\u8868": []
   dialogueData:
   - {fileID: 11400000, guid: 4e1c42820f3b3e8409790b6f5859da7a, type: 2}
   - {fileID: 11400000, guid: dee3b2dacff98db49a7785e32421439f, type: 2}
@@ -4303,7 +4303,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 482af2b2bb7198e47b18ada0535c89e0, type: 2}
   currentDialogueID: 0
   interval: 0.1
-  intervalAuto: 0.07
+  intervalAuto: 1
   textTalker: {fileID: 856109863}
   textContent: {fileID: 2116521847}
   continueIcon: {fileID: 109830808}
@@ -4314,14 +4314,6 @@ MonoBehaviour:
   vanishMultiple: 2.5
   continueBtns: 0d0000000f0100002000000043010000
   ani: {fileID: 672075813}
-  characteName:
-  - "\u5C0F\u611B"
-  - "\u5C0F\u5149"
-  - "\u65C1\u767D"
-  characterImages:
-  - {fileID: 1652230996}
-  - {fileID: 802472937}
-  - {fileID: 0}
 --- !u!1 &1533400010
 GameObject:
   m_ObjectHideFlags: 0
@@ -4334,6 +4326,7 @@ GameObject:
   - component: {fileID: 1533400013}
   - component: {fileID: 1533400012}
   - component: {fileID: 1533400014}
+  - component: {fileID: 1533400015}
   m_Layer: 5
   m_Name: "\u56DE\u60F3\u7528"
   m_TagString: Untagged
@@ -4413,6 +4406,23 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1533400015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533400010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2248f21c26bef0f49910f15e859dc280, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainUI: {fileID: 1533400014}
+  openSpeed: 5
+  isOpen: 0
+  tempLog: {fileID: 8655790312572690840}
+  bgLog: {fileID: 1874656768}
 --- !u!1 &1543700454
 GameObject:
   m_ObjectHideFlags: 0
@@ -4442,6 +4452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2f81b8001a95646b9b6dfe679596e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialogueDataList: []
   dialogieUI: {fileID: 835071349}
   optionUI: {fileID: 672075812}
   dialogieLogUI: {fileID: 1533400010}
@@ -4452,10 +4463,18 @@ MonoBehaviour:
   textTalkerBefore: {fileID: 229410987}
   textContentBefore: {fileID: 1157826962}
   dialogueBeforePrefab: {fileID: 8655790312572690840}
+  characteName:
+  - "\u5C0F\u611B"
+  - "\u5C0F\u5149"
+  - "\u65C1\u767D"
+  characterImages:
+  - {fileID: 1652230996}
+  - {fileID: 802472937}
+  - {fileID: 0}
   basemapImages:
   - {r: 1, g: 0, b: 0.28504562, a: 0.56078434}
   - {r: 0.046279836, g: 0.05669804, b: 0.754717, a: 0.56078434}
-  - {r: 0.6792453, g: 0.29995665, b: 0.06728373, a: 0.56078434}
+  - {r: 0.29803923, g: 0.3019608, b: 0.30980393, a: 0.56078434}
   isAutoplay: 0
   isHideDialogue: 0
 --- !u!4 &1543700456
@@ -5012,7 +5031,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0.00012207031}
   m_SizeDelta: {x: 0, y: -787.68555}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1874656769
@@ -6220,6 +6239,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7735191241594518681}
+  - component: {fileID: 8655790312572690841}
   m_Layer: 5
   m_Name: "\u4E4B\u524D\u5C0D\u8A71\u7D00\u9304"
   m_TagString: Untagged
@@ -6227,3 +6247,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8655790312572690841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8655790312572690840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ea2b86b69d3b6b40aad8ffeba7ac127, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  contentBG: {fileID: 612392741}
+  textContentBefore: {fileID: 1157826962}
+  talkerBG: {fileID: 596587241}
+  textTalkerBefore: {fileID: 229410987}
