@@ -1,55 +1,55 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 public class DialogueLogWindows : MonoBehaviour
 {
-	[SerializeField, Header("¹ï¸Ü¼ÒªO")]
+	[SerializeField, Header("å°è©±æ¨¡æ¿")]
 	GameObject tempLog = null;
-	[SerializeField, Header("¹ï¸Ü¬ö¿ı­I´º")]
+	[SerializeField, Header("å°è©±ç´€éŒ„èƒŒæ™¯")]
 	RectTransform bgLog = null;
 
 	float timeScaleLog = 0f;
 
 	private void Start()
 	{
-		¨ê·s¹ï¸Ü¬ö¿ı();
+		åˆ·æ–°å°è©±ç´€éŒ„();
 	}
 
-	// «Ø¥ß"©U§£±í"¦Cªí ¥Î©ó¼È¦s­n²M°£ªº®æ¤l
-	List<GameObject> ©U§£±í = new List<GameObject>();
+	// å»ºç«‹"åƒåœ¾æ¡¶"åˆ—è¡¨ ç”¨æ–¼æš«å­˜è¦æ¸…é™¤çš„æ ¼å­
+	List<GameObject> åƒåœ¾æ¡¶ = new List<GameObject>();
 
-	void ¨ê·s¹ï¸Ü¬ö¿ı()
+	void åˆ·æ–°å°è©±ç´€éŒ„()
 	{
-		// ²M°£¤W¦¸¼È¦sªº®æ¤l
-		foreach (var gb in ©U§£±í)
+		// æ¸…é™¤ä¸Šæ¬¡æš«å­˜çš„æ ¼å­
+		foreach (var gb in åƒåœ¾æ¡¶)
 			Destroy(gb);
-		// ­«»s°}¦C
-		©U§£±í.Clear();
+		// é‡è£½é™£åˆ—
+		åƒåœ¾æ¡¶.Clear();
 
-		// ®æ¤l¼ÒªO¥»¨­¤£Åã¥Ü
+		// æ ¼å­æ¨¡æ¿æœ¬èº«ä¸é¡¯ç¤º
 		tempLog.SetActive(false);
-		// i¤p©ó¹ï¸Ü¸ê®Æ¼Æ¶q
+		// iå°æ–¼å°è©±è³‡æ–™æ•¸é‡
 		for (int i = 0; i < DialogueManager.instance.dialogueDataList.Count; i++)
 		{
 			for (int j = 0; j < DialogueManager.instance.dialogueDataList[i].dialogueTotalList.Count; j++)
 			{
-				bool ¹ï¸Ü¹L¤F = DialogueManager.instance.¤w¸g¹ï¸Ü¹L¤F(DialogueManager.instance.dialogueDataList[i].dialogueTotalList[j].dialogueID,
+				bool å°è©±éäº† = DialogueManager.instance.å·²ç¶“å°è©±éäº†(DialogueManager.instance.dialogueDataList[i].dialogueTotalList[j].dialogueID,
 					out Dialogue dialogue);
-				if (¹ï¸Ü¹L¤F)
+				if (å°è©±éäº†)
 				{
-					// Åã¥Ü¥¿¦b©Î¤w¸g¹ï¸Ü¹Lªº¸ê®Æªº¤º®e
-					// ½Æ»s¤@­Ó¹ï¸Ü¬ö¿ı¼ÒªO ¨Ã©ñ¶i¹ï¸Ü¬ö¿ı­I´º¤¤
+					// é¡¯ç¤ºæ­£åœ¨æˆ–å·²ç¶“å°è©±éçš„è³‡æ–™çš„å…§å®¹
+					// è¤‡è£½ä¸€å€‹å°è©±ç´€éŒ„æ¨¡æ¿ ä¸¦æ”¾é€²å°è©±ç´€éŒ„èƒŒæ™¯ä¸­
 					GameObject tempLog = Instantiate(this.tempLog, bgLog);
 					tempLog.SetActive(true);
 					tempLog.GetComponent<LogGrid>().InputDialogueData(dialogue.dialogueID);
-					©U§£±í.Add(tempLog);
+					åƒåœ¾æ¡¶.Add(tempLog);
 				}
 				else
 				{
-					// ½Æ»s¤@­Ó¹ï¸Ü¬ö¿ı¼ÒªO ¨Ã©ñ¶i¹ï¸Ü¬ö¿ı­I´º¤¤
+					// è¤‡è£½ä¸€å€‹å°è©±ç´€éŒ„æ¨¡æ¿ ä¸¦æ”¾é€²å°è©±ç´€éŒ„èƒŒæ™¯ä¸­
 					GameObject tempLog = Instantiate(this.tempLog, bgLog);
 					tempLog.transform.localScale = Vector2.zero;
-					©U§£±í.Add(tempLog);
+					åƒåœ¾æ¡¶.Add(tempLog);
 				}
 			}
 		}
