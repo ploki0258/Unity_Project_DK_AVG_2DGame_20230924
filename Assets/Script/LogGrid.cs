@@ -12,7 +12,7 @@ public class LogGrid : MonoBehaviour
 	Image talkerBG = null;
 	[SerializeField, Header("之前對話人名")]
 	TextMeshProUGUI textTalkerBefore = null;
-
+	
 	DialogueData dataLog;
 
 	public void InputDialogueData(int id)
