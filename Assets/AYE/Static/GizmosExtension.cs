@@ -22,6 +22,17 @@
 #endif
         }
 
+        /// <summary>繪製視覺範圍</summary>
+        /// <param name="eye">眼睛物件</param>
+        /// <param name="radius">視線長度</param>
+        /// <param name="angle">角度</param>
+        public static void DrawSeeRange(Transform eye, float radius, float angle)
+        {
+            Quaternion quaternion = Quaternion.AngleAxis(angle * -0.5f, Vector3.up);
+            if (eye != null)
+                GizmosX.DrawSolidArc(eye.position, Vector3.up, quaternion * eye.forward, angle, radius);
+        }
+
         /// <summary>
         /// 在 3D 空間中繪製一個圓形扇區（餅圖）。
         /// </summary>

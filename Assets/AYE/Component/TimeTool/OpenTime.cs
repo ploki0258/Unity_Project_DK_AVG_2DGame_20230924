@@ -1,16 +1,16 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-// ³o¬O¨Æ¥ó¤u¨ã¥ÎªºªF¦è
+// é€™æ˜¯äº‹ä»¶å·¥å…·ç”¨çš„æ±è¥¿
 using UnityEngine.Events;
 
 /// <summary>
-/// ³o¬O©ñ¸m¹CÀ¸¥Îªº­p®É¾¹¡A¦bª±®a¤U½u¦A¤W½u¤§«á±N¨ú±o¤U½u´Á¶¡ªº¬í¼Æ¡C
+/// é€™æ˜¯æ”¾ç½®éŠæˆ²ç”¨çš„è¨ˆæ™‚å™¨ï¼Œåœ¨ç©å®¶ä¸‹ç·šå†ä¸Šç·šä¹‹å¾Œå°‡å–å¾—ä¸‹ç·šæœŸé–“çš„ç§’æ•¸ã€‚
 /// </summary>
 public class OpenTime : MonoBehaviour
 {
-    // Unity¨Æ¥ó
+    // Unityäº‹ä»¶
     [SerializeField] UnityEvent<float> how_long_have_you_slept;
     [SerializeField] bool never_kill_me = false;
 
@@ -18,22 +18,22 @@ public class OpenTime : MonoBehaviour
     {
         if (never_kill_me)
         {
-            // ½T«O³o­Óª«¥ó¤£·|¦b¤Á´«Ãö¥d®É³Q²¾°£¡A¦ı¬O¨Ï¥Î³o­Ó¥\¯à­nÂÔ·V¡A¦b­«½Æ¸ü¤J³o­ÓÃö¥d®É·|³y¦¨¤À¨­Åı­pºâ¿ù»~¡A¤£«ØÄ³±Ò°Ê¡C
+            // ç¢ºä¿é€™å€‹ç‰©ä»¶ä¸æœƒåœ¨åˆ‡æ›é—œå¡æ™‚è¢«ç§»é™¤ï¼Œä½†æ˜¯ä½¿ç”¨é€™å€‹åŠŸèƒ½è¦è¬¹æ…ï¼Œåœ¨é‡è¤‡è¼‰å…¥é€™å€‹é—œå¡æ™‚æœƒé€ æˆåˆ†èº«è®“è¨ˆç®—éŒ¯èª¤ï¼Œä¸å»ºè­°å•Ÿå‹•ã€‚
             DontDestroyOnLoad(this.gameObject);
         }
 
-        // ÀË¬d¬O§_¦³¬ö¿ı ¦pªG¨S¦³ªí¥Üª±®a¬O²Ä¤@¦¸¤W½u¡A¤£»İ­n³B²z¤U½u¦b¤W½uªº©ñ¸m®É¶¡¡C
+        // æª¢æŸ¥æ˜¯å¦æœ‰ç´€éŒ„ å¦‚æœæ²’æœ‰è¡¨ç¤ºç©å®¶æ˜¯ç¬¬ä¸€æ¬¡ä¸Šç·šï¼Œä¸éœ€è¦è™•ç†ä¸‹ç·šåœ¨ä¸Šç·šçš„æ”¾ç½®æ™‚é–“ã€‚
         if (PlayerPrefs.GetString("CLOSE_GAME_TIME", "") != "")
         {
-            // ·í«e®É¶¡(§O§Ñ¤F³o¬Oªì©l¤Æ) - ¤W¦¸Ãö³¬®É¶¡ ´N¥i¥H¨D¥X¶¡¶Z¤F
+            // ç•¶å‰æ™‚é–“(åˆ¥å¿˜äº†é€™æ˜¯åˆå§‹åŒ–) - ä¸Šæ¬¡é—œé–‰æ™‚é–“ å°±å¯ä»¥æ±‚å‡ºé–“è·äº†
             TimeSpan timeSpan = DateTime.Now.Subtract(Aye.GetTimeByString(PlayerPrefs.GetString("CLOSE_GAME_TIME")));
-            // µo¥X¨Æ¥óÅı¤j®a­pºâª±®a¦@ºÎ¤F´X¬í ­n®³¨ì¤°»òµ¥µ¥
+            // ç™¼å‡ºäº‹ä»¶è®“å¤§å®¶è¨ˆç®—ç©å®¶å…±ç¡äº†å¹¾ç§’ è¦æ‹¿åˆ°ä»€éº¼ç­‰ç­‰
             how_long_have_you_slept.Invoke((float)timeSpan.TotalSeconds);
         }
     }
     private void OnDestroy()
     {
-        // ·í³o­Óª«¥ó³Q²¾°£®É¬ö¿ı¤U½u®É¶¡
+        // ç•¶é€™å€‹ç‰©ä»¶è¢«ç§»é™¤æ™‚ç´€éŒ„ä¸‹ç·šæ™‚é–“
         PlayerPrefs.SetString("CLOSE_GAME_TIME", Aye.GetStringByDateTime(DateTime.Now));
     }
 }

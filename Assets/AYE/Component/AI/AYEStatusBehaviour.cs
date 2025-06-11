@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.ComponentModel;
+using static UnityEngine.Rendering.DebugUI;
 
 /// <summary>
 /// <para>基於FSM狀態機設計的AI底層，使用時需在Awake執行AddStatus註冊狀態。</para>
 /// <para>AddStatus : 登記狀態</para>
+/// <para>AddTag : 登記現有狀態的標籤</para>
 /// <para>IsTime : 狀態內泛用的計時器，切換清空</para>
 /// <para>status : 當前狀態列舉，set時切換狀態</para>
 /// <para>lestStatus : 上個狀態列舉，僅讀</para>
@@ -14,6 +17,8 @@ using System;
 /// <para>OnANY : 進入任何狀態前</para>
 /// <para>Update50 : 省效能的通用刷新</para>
 /// <para>FixedUpdate30 : 省效能的通用物理刷新</para>
+/// <para>IsTag : 當前狀態的標籤是否包含</para>
+/// <para>IsLastTag : 上個狀態的標籤是否包含</para>
 /// <para></para>
 /// </summary>
 public class AYEStatusBehaviour<StatusEnum> : MonoBehaviour where StatusEnum : Enum
@@ -21,6 +26,7 @@ public class AYEStatusBehaviour<StatusEnum> : MonoBehaviour where StatusEnum : E
     struct StatusPack
     {
         public StatusEnum status;
+        public StatusEnum[] tag;
         public Action OnFunctionEnter;
         public Action UpdateFunction;
         public Action OnFunctionExit;
@@ -28,9 +34,27 @@ public class AYEStatusBehaviour<StatusEnum> : MonoBehaviour where StatusEnum : E
         public Action LateUpdateFunction;
         public Action UpdateFunction50;
         public Action FixedUpdateFunction30;
+        public Action OnDrawGizmosFunction;
+        /// <summary>這個狀態的標籤是否含有</summary>
+        public bool IsTag(params StatusEnum[] list)
+        {
+            for (int i = 0; i < tag.Length; i++)
+            {
+                for (int j = 0; j < list.Length; j++)
+                {
+                    if (list[j].Equals(tag[i]))
+                        return true;
+                }
+            }
+            return false;
+        }
     }
     List<StatusPack> list = new List<StatusPack>();
     StatusEnum firstStatus;
+
+    /// <summary>從什麼狀態切換到什麼狀態，會在切換結束之後才運行。</summary>
+    public Action<StatusEnum, StatusEnum> OnStatusChange = null;
+
     /// <summary>
     /// <para>登記狀態</para>
     /// <para>※必須在Awake完成</para>
@@ -47,10 +71,12 @@ public class AYEStatusBehaviour<StatusEnum> : MonoBehaviour where StatusEnum : E
     /// <param name="LateUpdateFunction">狀態螢幕顯示刷新</param>
     /// <param name="UpdateFunction50">省效能狀態刷新</param>
     /// <param name="FixedUpdateFunction30">省效能狀態物理刷新</param>
-    public void AddStatus (StatusEnum status, Action OnFunctionEnter, Action UpdateFunction, Action OnFunctionExit = null, Action FixedUpdateFunction = null, Action LateUpdateFunction = null, Action UpdateFunction50 = null, Action FixedUpdateFunction30 = null)
+    /// <param name="OnDrawGizmosFunction">Unity Gizmos</param>
+    public void AddStatus(StatusEnum status, Action OnFunctionEnter, Action UpdateFunction, Action OnFunctionExit = null, Action FixedUpdateFunction = null, Action LateUpdateFunction = null, Action UpdateFunction50 = null, Action FixedUpdateFunction30 = null, Action OnDrawGizmosFunction = null)
     {
         StatusPack temp = new StatusPack();
         temp.status = status;
+        temp.tag = new StatusEnum[0];
         temp.OnFunctionEnter = OnFunctionEnter;
         temp.UpdateFunction = UpdateFunction;
         temp.OnFunctionExit = OnFunctionExit;
@@ -58,63 +84,119 @@ public class AYEStatusBehaviour<StatusEnum> : MonoBehaviour where StatusEnum : E
         temp.LateUpdateFunction = LateUpdateFunction;
         temp.UpdateFunction50 = UpdateFunction50;
         temp.FixedUpdateFunction30 = FixedUpdateFunction30;
+        temp.OnDrawGizmosFunction = OnDrawGizmosFunction;
         list.Add(temp);
         if (list.Count == 1)
             firstStatus = status;
+    }
+
+    /// <summary>
+    /// <br>為一個狀態添加別的狀態列舉作為標籤</br>
+    /// <br>※這個做為標籤的狀態列舉不應該被當成一般狀態使用</br>
+    /// </summary>
+    /// <param name="status"></param>
+    /// <param name="tag"></param>
+    public void AddTag(StatusEnum status, params StatusEnum[] tag)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (status.Equals(list[i].status))
+            {
+                StatusPack temp = list[i];
+                temp.tag = tag;
+                list[i] = temp;
+                break;
+            }
+        }
     }
 
     /// <summary>當前狀態，賦值時會先執行上個狀態的OnFunctionExit然後才更新status並執行OnFunctionEnter</summary>
     public StatusEnum status
     {
         get { return _status; }
-        set { Switch(value); }
+        set
+        {
+            needUpdateStatus = value;
+            needChangeStatus = true;
+            if (statusLogTyoe == AyeStatusLogType.Log)
+                Debug.Log(this.gameObject.name + " = " + needUpdateStatus, this.gameObject);
+            //Switch(value);
+            //if (statusLogTyoe == AyeStatusLogType.Log)
+            //    Debug.Log(this.gameObject.name + " = " + value, this.gameObject);
+        }
     }
-    StatusEnum _status;
-
+    StatusEnum needUpdateStatus;
+    bool needChangeStatus = false;
+    [SerializeField] [ShowOnly] StatusEnum _status;
+    [SerializeField] AyeStatusLogType statusLogTyoe = AyeStatusLogType.None;
     /// <summary>上次的狀態，僅供讀取</summary>
-    public StatusEnum lestStatus
+    public StatusEnum lastStatus
     {
-        get { return _lestStatus; }
+        get { return _lastStatus; }
     }
-    StatusEnum _lestStatus;
+    StatusEnum _lastStatus;
 
-    StatusPack statusPack;
+    StatusPack statusPack = new StatusPack();
+    StatusPack lastStatusPack = new StatusPack();
 
     bool isFirstSwitch = true;
     bool isExit = false;
     bool isEnter = false;
-    void Switch(StatusEnum status)
+    int switchTimes = 0;
+
+    /// <summary>事件列表，只會記住最後切換的10個事件。</summary>
+    public List<StatusEnum> statusList = new List<StatusEnum>();
+
+    bool isSwitching = false;
+    IEnumerator ISwitch(StatusEnum status)
     {
+        isSwitching = true;
+        yield return null;
+
+        // 歸零狀態時間
+        _statusTime = 0f;
+        // 清空計時器
+        timeList.Clear();
+
+        if (isEnter && status.Equals(_status))
+        {
+            Debug.LogError("這樣會無限迴圈。");
+            isSwitching = false;
+            yield break;
+        }
         if (isExit)
         {
             Debug.LogError("離開任何狀態時不可以切換動畫，因為會再呼叫自己離開狀態並產生無限迴圈，請在其他情況下切換。");
-            return;
+            isSwitching = false;
+            yield break;
         }
-        // 第一次不執行
+        // 非第一次才執行
         if (isFirstSwitch == false)
         {
             isExit = true;
             // 先執行當前狀態的OnFunctionExit
             if (statusPack.OnFunctionExit != null)
                 statusPack.OnFunctionExit.Invoke();
-            isExit = false;
+
+            yield return null;
+
             // 離開任何狀態後的執行
             ExitANY(_status);
+            isExit = false;
         }
         isFirstSwitch = false;
 
-        // 更新上一個狀態為當前狀態
-        _lestStatus = _status;
+        // 將上一個狀態設定為當前狀態
+        _lastStatus = _status;
+
+        // 將上一個狀態設定為當前狀態
+        lastStatusPack = FindStuff(_status);
+
         // 更新當前狀態
         _status = status;
 
-        // 刷新當前狀態
+        // 更新當前狀態
         statusPack = FindStuff(_status);
-
-        // 歸零狀態時間
-        _statusTime = 0f;
-        // 清空計時器
-        timeList.Clear();
 
         // 進入任何狀態前的執行
         OnANY(status);
@@ -124,7 +206,28 @@ public class AYEStatusBehaviour<StatusEnum> : MonoBehaviour where StatusEnum : E
         if (statusPack.OnFunctionEnter != null)
             statusPack.OnFunctionEnter.Invoke();
         isEnter = false;
+        switchTimes++;
+
+        yield return null;
+
+        statusList.Add(_status);
+        // 超出十個清除最舊的
+        if (statusList.Count > 10)
+            statusList.RemoveAt(0);
+
+        if (OnStatusChange != null)
+        {
+            // 通知事件 傳送上一個狀態和當下狀態
+            if (statusList.Count >= 2)
+                OnStatusChange.Invoke(statusList[statusList.Count - 2], statusList[statusList.Count - 1]);
+            else
+                OnStatusChange.Invoke(_status, _status);
+            yield return null;
+        }
+
+        isSwitching = false;
     }
+
     /// <summary>
     /// <para>A狀態切換到B狀態，介於A狀態的離開和B狀態的進入之間，v為A狀態。</para>
     /// <para>比OnANY早</para>
@@ -139,9 +242,9 @@ public class AYEStatusBehaviour<StatusEnum> : MonoBehaviour where StatusEnum : E
     /// </summary>
     virtual protected void OnANY(StatusEnum v)
     {
-        
+
     }
-    StatusPack FindStuff (StatusEnum status)
+    StatusPack FindStuff(StatusEnum status)
     {
         for (int i = 0; i < list.Count; i++)
         {
@@ -163,6 +266,9 @@ public class AYEStatusBehaviour<StatusEnum> : MonoBehaviour where StatusEnum : E
     int updateTimes = 0;
     virtual protected void Update()
     {
+        if (isSwitching)
+            return;
+
         _statusTime += Time.deltaTime;
         if (statusPack.UpdateFunction != null)
             statusPack.UpdateFunction.Invoke();
@@ -181,6 +287,9 @@ public class AYEStatusBehaviour<StatusEnum> : MonoBehaviour where StatusEnum : E
     int fixedUpdateTimes = 0;
     virtual protected void FixedUpdate()
     {
+        if (isSwitching)
+            return;
+
         if (statusPack.FixedUpdateFunction != null)
             statusPack.FixedUpdateFunction.Invoke();
         fixedUpdateTimes++;
@@ -197,8 +306,26 @@ public class AYEStatusBehaviour<StatusEnum> : MonoBehaviour where StatusEnum : E
 
     virtual protected void LateUpdate()
     {
+        if (isSwitching)
+            return;
+
         if (statusPack.LateUpdateFunction != null)
             statusPack.LateUpdateFunction.Invoke();
+        // 每一幀結束後才切換狀態
+        if (needChangeStatus && isSwitching == false)
+        {
+            needChangeStatus = false;
+            StartCoroutine(ISwitch(needUpdateStatus));
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (isSwitching)
+            return;
+
+        if (statusPack.OnDrawGizmosFunction != null)
+            statusPack.OnDrawGizmosFunction.Invoke();
     }
 
     /// <summary>狀態累進時間，每次切換都會歸零。</summary>
@@ -255,6 +382,28 @@ public class AYEStatusBehaviour<StatusEnum> : MonoBehaviour where StatusEnum : E
         else
             return false;
     }
+    /// <summary>當前狀態的標籤是否包含</summary>
+    public bool IsTag(params StatusEnum[] list)
+    {
+        if (switchTimes < 0)
+            return false;
+        return statusPack.IsTag(list);
+    }
+    /// <summary>上個狀態的標籤是否包含</summary>
+    public bool IsLastTag(params StatusEnum[] list)
+    {
+        if (switchTimes < 2)
+            return false;
+        return lastStatusPack.IsTag(list);
+    }
+
+    public enum AyeStatusLogType
+    {
+        // 不用顯示
+        None,
+        // 顯示
+        Log,
+    }
 }
 
-// 2021 by 阿葉
+// 2023 by 阿葉

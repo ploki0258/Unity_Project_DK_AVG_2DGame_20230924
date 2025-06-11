@@ -6,11 +6,12 @@ using UnityEngine.UI;
 
 namespace AYE
 {
+    [AddComponentMenu("AYE/ScrollPage")]
     /// <summary>擺在ScrollRect旁，將ScrollRect改造成翻頁的運作方式。</summary>
     public class ScrollPage : MonoBehaviour, IBeginDragHandler, IEndDragHandler
     {
         [SerializeField] [Header("速度")] float smooting = 4;
-        [SerializeField] [Header("總頁數")] int totalNumberOfPages = 3;
+        [Header("總頁數")] public int totalNumberOfPages = 3;
         [SerializeField] [Header("多少像素可跳頁")] float jumpPagePixel = 270f;
         [SerializeField] [Header("跳頁標準時間")] float jumpPageTime = 0.1f;
 

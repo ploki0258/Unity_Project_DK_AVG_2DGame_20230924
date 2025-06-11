@@ -15,23 +15,23 @@ MonoBehaviour:
   dialogueTotalList:
   - dialogueID: 0
     toDialogueOrOptionID: 0a000000
-    dialogueType: 2
+    dialogueType: 0
     characterPos: 0
     talkerName: "\u65C1\u767D"
     dialogueContents:
-    - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB9!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB9***\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB9~~~"
-    - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB92!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB92---\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB92+++"
+    - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB91!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB91+++\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB91~~~"
+    - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB91???\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB91---\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB91___"
     effectType: 
     effectTargetName: []
     effectValue: []
   - dialogueID: 10
-    toDialogueOrOptionID: 14000000
-    dialogueType: 0
+    toDialogueOrOptionID: 140000001e000000
+    dialogueType: 1
     characterPos: 0
-    talkerName: 
+    talkerName: "\u65C1\u767D"
     dialogueContents:
-    - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB93!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB93!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB93!!!"
-    - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB94!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB94!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB94!!!"
+    - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB92!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB92+++\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB92~~~"
+    - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB92???\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB92---\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB92___"
     effectType: 
     effectTargetName: []
     effectValue: []
@@ -39,19 +39,21 @@ MonoBehaviour:
     toDialogueOrOptionID: ffffffff
     dialogueType: 0
     characterPos: 0
-    talkerName: 
+    talkerName: "\u65C1\u767D"
     dialogueContents:
-    - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB95!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB95!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB95!!!"
-    - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB96!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB96!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB96!!!"
+    - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB93!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB93+++\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB93~~~"
+    - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB93???\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB93---\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB93___"
     effectType: 
     effectTargetName: []
     effectValue: []
-  - dialogueID: -1
+  - dialogueID: 30
     toDialogueOrOptionID: 
     dialogueType: 4
     characterPos: 0
-    talkerName: 
-    dialogueContents: []
+    talkerName: "\u65C1\u767D"
+    dialogueContents:
+    - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB94!!!\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB94+++\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB94~~~"
+    - "\u9019\u662F\u6E2C\u8A66\u5167\u5BB94???\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB94---\n\u9019\u662F\u6E2C\u8A66\u5167\u5BB94___"
     effectType: 
     effectTargetName: []
     effectValue: []

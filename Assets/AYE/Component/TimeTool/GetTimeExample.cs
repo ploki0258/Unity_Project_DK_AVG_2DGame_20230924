@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +6,6 @@ public class GetTimeExample : MonoBehaviour
 {
     public void WakeUp(float seconds)
     {
-        Debug.Log("¦Û±q¤WÃö³¬¹CÀ¸¨ì½u¦b¡AÁ`¦@¹L¤F " + seconds + " ¬í©O!");
+        Debug.Log("è‡ªå¾ä¸Šé—œé–‰éŠæˆ²åˆ°ç·šåœ¨ï¼Œç¸½å…±éäº† " + seconds + " ç§’å‘¢!");
     }
 }

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SingletonMonoBehaviour<T> : MonoBehaviour where T : class
 {
-    static public T ins = null;
+    static public T instance = null;
     virtual protected void Awake()
     {
-        ins = this as T;
+        instance = this as T;
     }
 }

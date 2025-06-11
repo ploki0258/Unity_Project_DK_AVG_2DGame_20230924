@@ -263,7 +263,7 @@ public class DialogueSystem : MonoBehaviour
 			// 第二個迴圈跑第i個對話資料中的對話總表 總共有幾個對話數_x
 			for (int x = 0; x < dialogueData[i].dialogueTotalList.Count; x++)
 			{
-				// 如果第i個對話資料.第x個對話數.對話類別為"對話" 且 當前ID 等於 第i個對話資料.第x個對話數.對話編號 的話 才執行
+				// 如果第i個對話資料.第x個對話數.對話類別為"對話"或"重要對話" 且 當前ID 等於 第i個對話資料.第x個對話數.對話編號 的話 才執行
 				if ((dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.對話 ||
 					 dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.重要對話) &&
 					 currentDialogueID == dialogueData[i].dialogueTotalList[x].dialogueID)
@@ -275,6 +275,8 @@ public class DialogueSystem : MonoBehaviour
 					DialogueManager.instance.optionUI.alpha = 0f;
 					// 更新對話者名稱
 					textTalker.text = dialogueData[i].dialogueTotalList[x].talkerName;
+
+					#region 更新人物圖示
 					// 更新對話者圖示顯示狀態
 					switch (dialogueData[i].dialogueTotalList[x].characterPos)
 					{
@@ -391,6 +393,8 @@ public class DialogueSystem : MonoBehaviour
 					}
 					*/
 					#endregion
+					#endregion
+
 					Debug.Log("當前ID：" + currentDialogueID);
 					// 第三個迴圈跑第i個對話資料中的對話總表的第x個對話數 總共有幾個對話內容_j
 					// 迴圈初始值不可為重複
@@ -412,7 +416,21 @@ public class DialogueSystem : MonoBehaviour
 								yield return new WaitForSeconds(interval);
 							}
 						}
+
+						#region 紀錄已對話過的資料
+						// 將對話過的內容記錄下來
 						對話過了 = DialogueManager.instance.已經對話過了(dialogueData[i].dialogueTotalList[x].dialogueID, out Dialogue dialogue);
+						// 如果對話過了 就將對話資料加到對話過列表中
+						if (對話過了)
+						{
+							Debug.Log("已經對話過了：" + dialogueData[i].dialogueTotalList[x].dialogueID);
+							// 將對話資料加入對話過的列表
+							對話過的列表.Add(dialogue);
+						}
+						else
+							Debug.Log("未對話過：" + dialogueData[i].dialogueTotalList[x].dialogueID);
+						#endregion
+
 						// 每段對話完成後顯示繼續圖示
 						continueIcon.SetActive(true);
 
@@ -459,7 +477,7 @@ public class DialogueSystem : MonoBehaviour
 					}
 				}
 
-				// 如果第i個對話資料.第x個對話數.對話類別為"選項" 且 當前ID 等於 第i個對話資料.第x個對話數.對話編號 的話 才執行
+				// 如果第i個對話資料.第x個對話數.對話類別為"選項"或"重要選項" 且 當前ID 等於 第i個對話資料.第x個對話數.對話編號 的話 才執行
 				if ((dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.選項 ||
 					 dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.重要選項) &&
 					 currentDialogueID == dialogueData[i].dialogueTotalList[x].dialogueID)
@@ -482,13 +500,13 @@ public class DialogueSystem : MonoBehaviour
 					// 第i個對話資料.第x個對話數.對話/選項內容的個數
 					for (int j = 0; j < dialogueData[i].dialogueTotalList[x].dialogueContents.Length; j++)
 					{
-						// 欲跳轉的編號個數需與選項內容的個數一致
+						// 欲跳轉的編號個數需與選項內容的個數一致 以避免對話跳轉時錯誤
 						if (dialogueData[i].dialogueTotalList[x].dialogueContents.Length != dialogueData[i].dialogueTotalList[x].toDialogueOrOptionID.Length)
 						{
 							Debug.Log("欲跳轉的編號個數需與選項內容的個數一致");
 							break;
 						}
-						// 指定欲跳轉的選項編號
+						// 取得欲跳轉的選項編號
 						int tempID = dialogueData[i].dialogueTotalList[x].toDialogueOrOptionID[j];
 						// 生成對話選項
 						GameObject tempOption = Instantiate(optionButton, dialoguePos);
@@ -508,6 +526,8 @@ public class DialogueSystem : MonoBehaviour
 					}
 					Debug.Log($"<color=orange>當前ID：{currentDialogueID}</color>");
 				}
+
+				#region 重要對話 / 選項
 				// 重要對話/選項 僅出現一次
 				if (dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.重要對話 ||
 					dialogueData[i].dialogueTotalList[x].dialogueType == DialogueType.重要選項)
@@ -523,6 +543,7 @@ public class DialogueSystem : MonoBehaviour
 						isDisposableDialogue = true;
 					}
 				}
+				#endregion
 			}
 		}
 

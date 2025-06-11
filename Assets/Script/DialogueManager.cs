@@ -15,10 +15,8 @@ public class DialogueManager : MonoBehaviour
 {
 	[Tooltip("角色名稱對應角色圖示字典")]
 	public Dictionary<string, Image> characterImagesDic = new Dictionary<string, Image>();
-	
 	[Tooltip("角色名稱對應底圖顏色字典")]
 	public Dictionary<string, Color> characterBasemapDic = new Dictionary<string, Color>();
-
 	[Tooltip("對話資料列表")]
 	public List<DialogueData> dialogueDataList = new List<DialogueData>();
 
@@ -55,7 +53,7 @@ public class DialogueManager : MonoBehaviour
 	[Tooltip("是否自動播放")]
 	public bool isAutoplay = false;
 	[Tooltip("是否隱藏對話框")]
-	public bool isHideDialogue = false;
+	public bool _isHideDialogue = false;
 	[Tooltip("是否隱藏對話紀錄")]
 	private bool isHideDialogueLogUI = true;
 	#endregion
@@ -141,6 +139,9 @@ public class DialogueManager : MonoBehaviour
 		return false;
 	}
 
+	/// <summary>
+	/// 測試用：顯示對話紀錄UI
+	/// </summary>
 	void TestShowDialogueLogUI()
 	{
 		if (Input.GetKeyDown(KeyCode.P) && isHideDialogueLogUI == true)
@@ -213,6 +214,16 @@ public class DialogueManager : MonoBehaviour
 		}
 	}
 
+	public bool isHideDialogue
+	{
+		get => _isHideDialogue;
+		set
+		{
+			_isHideDialogue = value;
+			if (dialogueHideChange != null)
+				dialogueHideChange.Invoke();
+		}
+	}
 	public Action dialogueHideChange;
 
 	/// <summary>
@@ -247,14 +258,30 @@ public class DialogueManager : MonoBehaviour
 	{
 		ShowDialogueLogUI();
 
-		//textTalkerBefore.text = DialogueSystem.instance.dialogueData[0].dialogueTotalList[0].talkerName;
-		//textContentBefore.text = DialogueSystem.instance.dialogueData[0].dialogueTotalList[0].dialogueContents[0];
+		for (int i = 0; i < DialogueSystem.instance.對話過的列表.Count; i++)
+		{
+			if (DialogueSystem.instance.對話過的列表.Count == 0)
+				return;
+			for (int j = 0; j < DialogueSystem.instance.對話過的列表[i].dialogueContents.Length; j++)
+			{
+				if (DialogueSystem.instance.對話過的列表[i].dialogueType == DialogueType.對話 ||
+					DialogueSystem.instance.對話過的列表[i].dialogueType == DialogueType.重要對話)
+				{
+					textTalkerBefore.text = DialogueSystem.instance.對話過的列表[i].talkerName;
+					textContentBefore.text = DialogueSystem.instance.對話過的列表[i].dialogueContents[j];
+				}
+				if (DialogueSystem.instance.對話過的列表[i].dialogueType == DialogueType.選項 ||
+					DialogueSystem.instance.對話過的列表[i].dialogueType == DialogueType.重要選項)
+				{
+					textTalkerBefore.text = DialogueSystem.instance.對話過的列表[i].talkerName;
+					textContentBefore.text = DialogueSystem.instance.對話過的列表[i].dialogueContents[j];
+				}
+			}
+		}
 	}
 
-	public void StopDislogue()
-	{
-		DialogueSystem.instance.enabled = false;
-	}
+	public void StopDislogue() => DialogueSystem.instance.enabled = false;
+
 
 	public void CloseButton()
 	{

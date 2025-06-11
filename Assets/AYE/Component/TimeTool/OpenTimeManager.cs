@@ -1,9 +1,9 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// §Úªº¤u§@¬O­t³d½T»{±¡ªp¨Ã²£¥ÍOpenTimeª«¥ó¨ì³õ¦a¤W¡A¦]¬°¥L¬O¤£¦º¤§¨­¡A­«½Æ¸ü¤JÃö¥d¥i¯à·|³Ğ³y¥X¤@¤j°ï¤À¨­¡C
+/// æˆ‘çš„å·¥ä½œæ˜¯è² è²¬ç¢ºèªæƒ…æ³ä¸¦ç”¢ç”ŸOpenTimeç‰©ä»¶åˆ°å ´åœ°ä¸Šï¼Œå› ç‚ºä»–æ˜¯ä¸æ­»ä¹‹èº«ï¼Œé‡è¤‡è¼‰å…¥é—œå¡å¯èƒ½æœƒå‰µé€ å‡ºä¸€å¤§å †åˆ†èº«ã€‚
 /// </summary>
 public class OpenTimeManager : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class OpenTimeManager : MonoBehaviour
         GameObject mainOpenTime = GameObject.Find("OpenTime");
         if (mainOpenTime == null)
         {
-            // ¬İ¨Ó³õ¤W¯uªº¤£¦s¦bOpenTime¥i¥H©ñ¤ßªº«Ø¥ß¤F¡C
+            // çœ‹ä¾†å ´ä¸ŠçœŸçš„ä¸å­˜åœ¨OpenTimeå¯ä»¥æ”¾å¿ƒçš„å»ºç«‹äº†ã€‚
             GameObject temp = Instantiate(openTimeObj);
             temp.name = "OpenTime";
         }

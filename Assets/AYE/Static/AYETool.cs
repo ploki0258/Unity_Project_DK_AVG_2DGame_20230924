@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 /// <summary>Aye系列為阿葉提供的綜合工具，最新版本請找阿葉拿。</summary>
 public static class Aye
 {
@@ -87,7 +88,7 @@ public static class Aye
         return r < v;
     }
 
-    /// <summary>百分比機率</summary>
+    /// <summary>百分比機率0~100</summary>
     public static bool IsRandom(float v)
     {
         float r = Random.Range(0f, 100f);
@@ -297,6 +298,91 @@ public static class Aye
             return v - add;
     }
     #endregion
+
+    #region 是否在同個圖層中
+    public static bool IsInLayerMask(int layer, LayerMask layermask)
+    {
+        return layermask == (layermask | (1 << layer));
+    }
+    #endregion
+
+    #region 直接用遊戲物件名稱找東西
+    /// <summary>直接用遊戲物件名稱找東西</summary>
+    [System.Obsolete]
+    public static T[] FindObjectsByName<T>(string objectName) where T : Object
+    {
+        return Object.FindObjectsByType<T>(FindObjectsSortMode.None).Where(t => t.name == objectName).ToArray();
+    }
+    #endregion
+    #region 3D中水平向量
+    /// <summary>3D中水平向量，類似RandominsideUnitSphere但沒有Y軸來節省效能</summary>
+    public static Vector3 RandominsideUnitSphereNoY()
+    {
+        Vector2 randomVector2D = Random.insideUnitCircle;
+        return new Vector3(randomVector2D.x, 0f, randomVector2D.y);
+    }
+    #endregion
+
+    #region 淨化
+    /// <summary>將字串淨化成英文大小寫和數字，適合解決網路回傳異常值</summary>
+    public static string Az09Pure(this string fr)
+    {
+        // 允許英文大小寫、數字和小數點
+        return System.Text.RegularExpressions.Regex.Replace(fr, "[^a-zA-Z0-9.]", "");
+    }
+    /// <summary>將字串淨化成Json可以使用的少數英數符號，不含中文，適合解決網路回傳異常值</summary>
+    public static string JsonPure(this string fr)
+    {
+        // 允許Json中會出現的一些符號
+        return System.Text.RegularExpressions.Regex.Replace(fr, "[^a-zA-Z{}\":,.\\[\\]0-9]", "");
+    }
+    /// <summary>允許中文、英文、數字以及少數Json會用到的英文符號，中文符號不在此列。</summary>
+    public static string Json中英Pure(this string fr)
+    {
+        // 允許中文、英文、數字以及少數Json會用到的符號。
+        return System.Text.RegularExpressions.Regex.Replace(fr, @"[^\p{L}\p{N}{}"":,.\\[\]]", "");
+    }
+    #endregion
+
+    #region 轉換成byte陣列
+    /// <summary>obj轉成byte陣列</summary>
+    public static byte[] ObjectToByteArray(this object obj)
+    {
+        if (obj == null)
+            return null;
+        System.Runtime.Serialization.Formatters.Binary.BinaryFormatter bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+        using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+        {
+            bf.Serialize(ms, obj);
+            return ms.ToArray();
+        }
+    }
+
+    /// <summary>byte陣列轉回obj</summary>
+    public static object ByteArrayToObject(this byte[] arrBytes)
+    {
+        System.IO.MemoryStream memStream = new System.IO.MemoryStream();
+        System.Runtime.Serialization.Formatters.Binary.BinaryFormatter binForm = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+        memStream.Write(arrBytes, 0, arrBytes.Length);
+        memStream.Seek(0, System.IO.SeekOrigin.Begin);
+        object obj = (object)binForm.Deserialize(memStream);
+        return obj;
+    }
+    #endregion
+
+    public static string TranslateString(string input)
+    {
+        var output = new char[input.Length];
+        for (int i = 0; i < input.Length; i++)
+        {
+            var charCode = (int)input[i];
+            if (charCode == 65533) // char �
+                output[i] = (char)233; // é
+            else
+                output[i] = input[i];
+        }
+        return new string(output);
+    }
 }
 #region Json簡化轉換
 [System.Serializable]
@@ -318,4 +404,4 @@ public struct ListFloat
 }
 #endregion
 
-// 2021 by 阿葉
+// 2023 by 阿葉

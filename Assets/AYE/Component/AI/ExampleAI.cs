@@ -16,8 +16,7 @@ namespace ExampleAI
         // 待命
         void OnIdleEnter()
         {
-            status = ExampleStatus.IDLE;
-            Debug.Log(lestStatus.ToString() + "-->" + status.ToString());
+            Debug.Log(lastStatus.ToString() + "-->" + status.ToString());
         }
         void UpdateIdle()
         {
@@ -31,7 +30,7 @@ namespace ExampleAI
         // 移動
         void OnMoveEnter()
         {
-            Debug.Log(lestStatus.ToString() + "-->" + status.ToString());
+            Debug.Log(lastStatus.ToString() + "-->" + status.ToString());
             Debug.Log("播放走路動畫");
         }
         void OnMoveExit()

@@ -1,10 +1,10 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// ¦n¬İªº³v¦rÅã¥Ü¾¹
+/// å¥½çœ‹çš„é€å­—é¡¯ç¤ºå™¨
 /// </summary>
 public class VeryGoodText : MonoBehaviour
 {
@@ -18,35 +18,39 @@ public class VeryGoodText : MonoBehaviour
     }
     [SerializeField] Text accountSayText = null;
     string tempAccountSayText = "";
+    [Header("æœ€å¤šé¡¯ç¤ºå¹¾è¡Œ")]
     [SerializeField] int maxCanAccountSayTextLine = 4;
     int nowCanAccountSayTextLine = 0;
     [SerializeField] float speed = 0.05f;
+    [Header("ä¸æ›è¡Œ")]
     [SerializeField] bool isOneLine = false;
+    [Header("åˆå§‹åŒ–æ™‚è‡ªå‹•é¡¯ç¤ºå…§å®¹")]
+    [Multiline(4)]
     [SerializeField] string autoAttMe = "";
     private void Start()
     {
         if (autoAttMe != "")
             Add(autoAttMe);
     }
-    /// <summary>§R°£ªF¦è¤§«á²K¥[¤@¦æ</summary>
+    /// <summary>åˆªé™¤æ±è¥¿ä¹‹å¾Œæ·»åŠ ä¸€è¡Œ</summary>
     public void CleanAdd(string v)
     {
         Clean();
         Add(v);
     }
-    /// <summary>¥ş§R¤F</summary>
+    /// <summary>å…¨åˆªäº†</summary>
     public void Clean()
     {
         nowCanAccountSayTextLine = 0;
         tempAccountSayText = "";
         accountSayText.text = "";
     }
-    /// <summary>²K¥[¤º®e ¤@¦¸¤@¦æ</summary>
+    /// <summary>æ·»åŠ å…§å®¹ ä¸€æ¬¡ä¸€è¡Œ</summary>
     public void Add(string v)
     {
         if (v.Contains("\n"))
         {
-            // ¤å³¹³B²z
+            // æ–‡ç« è™•ç†
             string[] alls = v.Split('\n');
             for (int i = 0; i < alls.Length; i++)
             {
@@ -60,7 +64,7 @@ public class VeryGoodText : MonoBehaviour
         }
         else
         {
-            // ³æ¦æ³B²z
+            // å–®è¡Œè™•ç†
             if (isOneLine)
                 tempAccountSayText = tempAccountSayText + v;
             else
@@ -78,7 +82,7 @@ public class VeryGoodText : MonoBehaviour
     {
         isRun = true;
     }
-    /// <summary>¬O§_¦b¹B§@</summary>
+    /// <summary>æ˜¯å¦åœ¨é‹ä½œ</summary>
     public bool isMove
     {
         get { return tempAccountSayText.Length > 0; }
@@ -93,7 +97,7 @@ public class VeryGoodText : MonoBehaviour
             nextUpdateAccountSayTextTime = Time.time + speed;
             if (tempAccountSayText.Length > 0)
             {
-                // ²¾°£¦hªº¦æ¼Æ
+                // ç§»é™¤å¤šçš„è¡Œæ•¸
                 if (tempAccountSayText[0] == '\n')
                 {
                     nowCanAccountSayTextLine++;
@@ -113,12 +117,12 @@ public class VeryGoodText : MonoBehaviour
                         nowCanAccountSayTextLine--;
                     }
                 }
-                // ¹J¨ì¬A©·¥[³t
+                // é‡åˆ°æ‹¬å¼§åŠ é€Ÿ
                 if (tempAccountSayText[0] == '<')
                     jumpTempAccountSayText = true;
                 if (tempAccountSayText[0] == '>')
                     jumpTempAccountSayText = false;
-                // ²K¥[¦r
+                // æ·»åŠ å­—
                 accountSayText.text = accountSayText.text + tempAccountSayText[0].ToString();
                 tempAccountSayText = tempAccountSayText.Remove(0, 1);
             }
